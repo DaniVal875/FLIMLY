@@ -1,0 +1,131 @@
+/* Reset y fuente */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #0d0d0d, #1a1a1a, #262626);
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Contenedor principal */
+.register-container {
+  width: 100%;
+  max-width: 420px;
+  padding: 20px;
+}
+
+/* Tarjeta */
+.register-card {
+  background: #111;
+  border-radius: 16px;
+  padding: 35px;
+  text-align: center;
+  box-shadow: 0 0 25px rgba(255, 0, 80, 0.35);
+}
+
+/* Encabezados */
+.title {
+  font-size: 2rem;
+  margin-bottom: 8px;
+  color: #461561;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+/* Formulario */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.input-group {
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  color: #fff;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  background: #222;
+  color: #fff;
+  transition: border 0.3s ease;
+}
+
+.input-group input:focus {
+  border: 2px solid #964CA7;
+}
+
+/* Checkbox */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: #bbb;
+}
+
+.checkbox-group input[type="checkbox"] {
+  accent-color: #964CA7; /* para navegadores que soportan */
+}
+
+.checkbox-group a {
+  color: #290038;
+  text-decoration: none;
+}
+.checkbox-group a:hover {
+  text-decoration: underline;
+}
+
+/* Botón */
+.btn {
+  background: #461561;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn:hover {
+  background: #290038;
+}
+
+/* Extra links */
+.extra {
+  margin-top: 18px;
+  font-size: 0.85rem;
+  color: #bbb;
+}
+
+.extra a {
+  color: #461561;
+  text-decoration: none;
+}
+
+.extra a:hover {
+  text-decoration: underline;
+}

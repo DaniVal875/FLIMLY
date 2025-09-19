@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filmly - Registro</title>
+  <link rel="stylesheet" href="Registro.css">
+</head>
+<body>
+  <div class="register-container">
+    <div class="register-card">
+      <h1 class="title">🎬 Crear cuenta</h1>
+      <p class="subtitle">Únete a la comunidad para comentar y calificar películas</p>
+
+      <form class="register-form" action="#" method="post">
+        <!-- Nombre -->
+        <div class="input-group">
+          <label for="name">Nombre completo</label>
+          <input type="text" id="name" name="name" placeholder="Tu nombre" required>
+        </div>
+
+        <!-- Correo -->
+        <div class="input-group">
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="input-group">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" name="password" placeholder="••••••••" required>
+        </div>
+
+        <!-- Términos -->
+        <div class="checkbox-group">
+          <input type="checkbox" id="terms" name="terms" required>
+          <label for="terms">
+            Acepto los <a href="#">términos y condiciones</a>
+          </label>
+        </div>
+
+        <button type="submit" class="btn">Registrarme</button>
+      </form>
+
+      <p class="extra">
+        ¿Ya tienes cuenta? <a href="Login.html">Inicia sesión</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

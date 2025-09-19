@@ -1,0 +1,80 @@
+/* Reset y fuente */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #0d0d0d, #1a1a1a, #262626);
+  color: #fff;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Contenedor */
+.logout-container {
+  width: 100%;
+  max-width: 500px;
+  padding: 20px;
+}
+
+/* Tarjeta */
+.logout-card {
+  background: #111;
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 0 25px #461561(255, 0, 80, 0.4);
+  animation: fadeIn 1s ease;
+}
+
+/* Títulos */
+.title {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #461561;
+}
+
+.subtitle {
+  font-size: 1rem;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.subtitle span {
+  color: #964CA7;
+  font-weight: bold;
+}
+
+.message {
+  font-size: 0.95rem;
+  margin-bottom: 25px;
+  line-height: 1.5;
+  color: #fff;
+}
+
+/* Botón */
+.btn {
+  display: inline-block;
+  background: #461561;
+  padding: 12px 20px;
+  border-radius: 8px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+
+.btn:hover {
+  background: #290038;
+}
+
+/* Animación */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
