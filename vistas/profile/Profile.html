@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filmly - Perfil</title>
+  <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+  <!-- Barra superior con botón de regreso -->
+  <header class="top-bar">
+    <button class="back-btn" onclick="window.history.back()" title="Volver">
+      ⬅
+    </button>
+    <h1 class="page-title">Perfil</h1>
+  </header>
+
+  <!-- Sección de usuario -->
+  <section class="profile-info">
+    <div class="avatar">
+      <img src="https://via.placeholder.com/150" alt="Foto de perfil">
+    </div>
+    <h2 class="username">Nombre del Usuario</h2>
+    <p class="bio">Amante del cine, compartiendo mis reseñas y descubriendo joyas cinematográficas.</p>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="number">250</span>
+        <span class="label">Seguidores</span>
+      </div>
+      <div class="stat">
+        <span class="number">180</span>
+        <span class="label">Siguiendo</span>
+      </div>
+      <div class="stat">
+        <span class="number">34</span>
+        <span class="label">Publicaciones</span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn edit">✏️ Editar</button>
+      <button class="btn share">🔗 Compartir</button>
+    </div>
+  </section>
+
+  <!-- Galería de reseñas -->
+  <section class="reviews">
+    <h3 class="section-title">Mis Reseñas</h3>
+    <div class="review-grid">
+      <a href="#" class="review-card">
+        <img src="https://via.placeholder.com/200x300?text=Reseña+1" alt="Reseña 1">
+      </a>
+      <a href="#" class="review-card">
+        <img src="https://via.placeholder.com/200x300?text=Reseña+2" alt="Reseña 2">
+      </a>
+      <a href="#" class="review-card">
+        <img src="https://via.placeholder.com/200x300?text=Reseña+3" alt="Reseña 3">
+      </a>
+      <a href="#" class="review-card">
+        <img src="https://via.placeholder.com/200x300?text=Reseña+4" alt="Reseña 4">
+      </a>
+      <!-- Agrega más imágenes según sea necesario -->
+    </div>
+  </section>
+</body>
+</html>
