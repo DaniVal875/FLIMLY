@@ -1,5 +1,6 @@
 <?php
-var_dump($_POST);
+// ¡HEMOS ELIMINADO LA LÍNEA var_dump($_POST); DE AQUÍ!
+
 session_start(); // Es importante iniciar la sesión al principio
 
 // 1. Incluimos la conexión
@@ -25,10 +26,9 @@ if ($resultado->num_rows === 1) {
         $_SESSION['id_usuario'] = $usuario['id_usuario'];
         $_SESSION['nombre_usuario'] = $usuario['nombre_usuario'];
         
-        // Lo redirigimos a una página principal (que puedes crear, ej: index.php)
-        // Por ahora, solo mostraremos un mensaje de éxito.
-        echo "<h1>¡Bienvenido, " . htmlspecialchars($_SESSION['nombre_usuario']) . "!</h1>";
-        // header('Location: ../index.php'); // Descomentar cuando tengas la página principal
+        // Ahora la redirección funcionará correctamente
+        header('Location: ../vistas/home/Home.html');
+        exit();
         
     } else {
         // Si la contraseña es incorrecta
