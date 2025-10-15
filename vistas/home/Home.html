@@ -16,17 +16,16 @@
     <div class="search-box">
       <input type="text" placeholder="Buscar películas...">
       <button onclick="buscar()">🔍</button>
-
-      <script>
-        function buscar() {
-          const query = document.getElementById("searchInput").value;
-          if (query.trim() !== "") {
-            window.location.href = `search-results.html?query=${encodeURIComponent(query)}`;
-          }
-        }
-      </script>
     </div>
   </header>
+  <script>
+    function buscar() {
+      const query = document.getElementById("searchInput").value;
+        if (query.trim() !== "") {
+            window.location.href = `search-results.html?query=${encodeURIComponent(query)}`;
+        }
+    }
+  </script>
 
   <!-- Contenedor principal de películas -->
   <main class="movies-section">

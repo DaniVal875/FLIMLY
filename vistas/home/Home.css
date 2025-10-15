@@ -1,112 +1,125 @@
-/* Reset y fuente */
-* {
+/* Estilos generales */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #000000;
+  color: white;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
-body {
-  background: #0d0d0d;
-  color: #fff;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
 /* Barra superior */
 .top-bar {
-  background: #111;
-  padding: 15px 20px;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  box-shadow: 0 0 10px rgba(255, 0, 80, 0.3);
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2e2e2e;
+  padding: 12px 20px;
+  border-bottom: 2px solid #290038;
 }
 
 .logo {
-  font-size: 1.6rem;
+  font-size: 1.4em;
   color: #723680;
 }
 
-.search-box input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-  background: #222;
-  color: #fff;
-  outline: none;
-  transition: border 0.3s ease;
+/* Buscador */
+.search-box {
+  display: flex;
+  align-items: center;
 }
 
-.search-box input:focus {
-  border: 2px solid #461561;
+.search-box input {
+  padding: 8px 12px;
+  border-radius: 6px 0 0 6px;
+  border: none;
+  width: 220px;
+}
+
+.search-box button {
+  padding: 8px 12px;
+  background-color: #461561;
+  border: none;
+  border-radius: 0 6px 6px 0;
+  color: white;
+  cursor: pointer;
+}
+
+.search-box button:hover {
+  background-color: #723680;
 }
 
 /* Sección de películas */
 .movies-section {
-  flex: 1;
   padding: 20px;
 }
 
 .section-title {
-  font-size: 1.3rem;
+  font-size: 1.6em;
   margin-bottom: 15px;
-  color: #723680;
 }
 
+/* Grid de películas */
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 15px;
 }
 
+/* Tarjetas */
 .movie-card {
-  background: #111;
-  border-radius: 12px;
-  overflow: hidden;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #000000;
+  border-radius: 10px;
   text-decoration: none;
-  color: #fff;
-  box-shadow: 0 0 10px rgba(255, 0, 80, 0.2);
-  transition: transform 0.3s ease;
+  color: white;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .movie-card:hover {
-  transform: scale(1.05);
+  transform: scale(1.04);
+  box-shadow: 0 0 15px rgba(175, 33, 223, 0.5);
 }
 
+/* 🔧 IMÁGENES IGUALES */
 .movie-card img {
   width: 100%;
-  display: block;
+  height: 240px;       /* Tamaño uniforme */
+  object-fit: cover;   /* Ajusta sin deformar */
+  border-bottom: 2px solid #723680;
 }
 
+/* Títulos de películas */
 .movie-card p {
-  padding: 10px;
-  font-size: 0.9rem;
-  background: #1a1a1a;
+  margin: 10px 0;
+  font-weight: 500;
+  text-align: center;
 }
 
 /* Menú inferior */
 .bottom-menu {
-  background: #111;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #2e2e2e;
   display: flex;
   justify-content: space-around;
-  padding: 10px 0;
-  box-shadow: 0 -2px 10px rgba(255, 0, 80, 0.3);
+  padding: 12px 0;
+  border-top: 2px solid #723680;
 }
 
 .menu-item {
-  font-size: 1.6rem;
-  color: #fff;
+  font-size: 1.5em;
+  color: white;
   text-decoration: none;
-  transition: color 0.3s ease;
 }
 
 .menu-item:hover {
   color: #723680;
 }
+
 
 /* Responsive */
 @media (min-width: 768px) {
