@@ -1,0 +1,127 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Fondo general */
+body {
+  background: #000000;
+  color: #fff;
+  min-height: 100vh;
+}
+
+/* Encabezado */
+.header {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  background: #2e2e2e;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.header h1 {
+  flex: 1;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.back-btn {
+  background: transparent;
+  border: none;
+  color: #723680;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Contenedor principal */
+.review-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Póster */
+.movie-poster {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.movie-poster img {
+  width: 200px;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(225, 26, 239, 0.477);
+}
+
+.movie-poster h2 {
+  margin-top: 10px;
+  font-size: 1.4rem;
+  color: #723680;
+}
+
+/* Formulario */
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.review-form label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.review-form textarea {
+  resize: none;
+  height: 120px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background: #2e2e2e;
+  color: #fff;
+}
+
+/* Estrellas */
+.stars {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.stars input {
+  display: none;
+}
+
+.stars label {
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #555;
+  transition: color 0.3s;
+}
+
+.stars input:checked ~ label,
+.stars label:hover,
+.stars label:hover ~ label {
+  color: #461561;
+}
+
+/* Botón enviar */
+.submit-btn {
+  background: #461561;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.submit-btn:hover {
+  background: #723680;
+}
