@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agregar Reseña</title>
+  <link rel="stylesheet" href="Add-review.css">
+</head>
+<body>
+  <header class="header">
+    <button class="back-btn">⬅</button>
+    <h1>Agregar Reseña</h1>
+  </header>
+
+  <main class="review-container">
+    <!-- Imagen de la película -->
+    <div class="movie-poster">
+      <img src="https://tse3.mm.bing.net/th/id/OIP.LpDCrJztwR26HLeLz2yQQgHaEK?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Póster de la película">
+      <h2>Título de la Película</h2>
+    </div>
+
+    <!-- Formulario -->
+    <form class="review-form">
+      <label for="review-text">Tu reseña:</label>
+      <textarea id="review-text" placeholder="Escribe aquí tu opinión..."></textarea>
+
+      <label for="rating">Calificación:</label>
+      <div class="stars">
+        <input type="radio" id="star5" name="rating" value="5">
+        <label for="star5">⭐</label>
+        <input type="radio" id="star4" name="rating" value="4">
+        <label for="star4">⭐</label>
+        <input type="radio" id="star3" name="rating" value="3">
+        <label for="star3">⭐</label>
+        <input type="radio" id="star2" name="rating" value="2">
+        <label for="star2">⭐</label>
+        <input type="radio" id="star1" name="rating" value="1">
+        <label for="star1">⭐</label>
+      </div>
+
+      <button type="submit" class="submit-btn">Enviar Reseña</button>
+    </form>
+  </main>
+</body>
+</html>
