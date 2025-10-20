@@ -12,14 +12,14 @@
       <h1 class="title">🎬 Filmly</h1>
       <p class="subtitle">Comenta, califica y comparte tus películas favoritas</p>
       
-      <form class="login-form">
+      <form class="login-form" action="../../controladores/login_controller.php" method="post">
         <div class="input-group">
           <label for="email">Correo electrónico</label>
-          <input type="email" id="email" placeholder="ejemplo@correo.com" required />
+          <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required />
         </div>
         <div class="input-group">
           <label for="password">Contraseña</label>
-          <input type="password" id="password" placeholder="••••••••" required />
+          <input type="password" id="password" name="password" placeholder="••••••••" required />
         </div>
         
         <button type="submit" class="btn" href="../home/Home.html">Iniciar sesión</button>

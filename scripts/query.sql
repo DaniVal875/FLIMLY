@@ -1,92 +1,94 @@
 CREATE DATABASE Filmly;
 USE Filmly;
-CREATE TABLE productora
-(
-    id_productora int PRIMARY KEY,
-    productora varchar(100)
+
+-- (Si necesitas empezar de cero, puedes borrar las tablas antes con DROP TABLE pelicula, usuario, etc.)
+
+CREATE TABLE productora (
+    id_productora INT PRIMARY KEY AUTO_INCREMENT,
+    productora VARCHAR(100)
 );
-CREATE TABLE pais
-(
-    id_pais INT PRIMARY KEY,
-    nombre varchar(100)
+
+CREATE TABLE pais (
+    id_pais INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100)
 );
-create table pelicula
-(
-	id_pelicula int PRIMARY KEY,
-    nombre varchar(100) NOT null,
-    fecha_estreno date not null,
-    pais_origen int,
-    duracion int,
-    sinopsis text,
-    imagen varchar(255), -- guardar ruta url de la imagen
-    productora int,
+
+CREATE TABLE pelicula (
+    id_pelicula INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    fecha_estreno DATE NOT NULL,
+    pais_origen INT,
+    duracion INT,
+    sinopsis TEXT,
+    imagen VARCHAR(255),
+    productora INT,
     FOREIGN KEY (productora) REFERENCES productora(id_productora),
     FOREIGN KEY (pais_origen) REFERENCES pais(id_pais)
 );
-CREATE TABLE genero
-(
-    id_genero int PRIMARY KEY,
-    nombre_genero varchar(100) not null
-);
-CREATE TABLE personal -- se refiere que en la misma tabla donde guardamos a los directores estamos guardando a los actores
-(
-    id_personal int PRIMARY KEY,
-    nombre_personal varchar(100),
-    url varchar(255), -- guardar url de alguna paguina como wikipedia donde se muestre su informacion completa
-    actor_director boolean -- usamos la misma tabla tanto para actores como para directores, diferenciamos uno del otro con booleanos de ser necesario aunque deberia ser presindible 
+
+CREATE TABLE genero (
+    id_genero INT PRIMARY KEY AUTO_INCREMENT,
+    nombre_genero VARCHAR(100) NOT NULL
 );
 
-create table idioma
-(
-    id_idioma int PRIMARY KEY,
-    idioma varchar(100)
+CREATE TABLE personal (
+    id_personal INT PRIMARY KEY AUTO_INCREMENT,
+    nombre_personal VARCHAR(100),
+    url VARCHAR(255),
+    actor_director BOOLEAN
 );
--- tablas intermedias de las tablas personal, genero e idioma
-CREATE table pelicula_personal
-(
-    id_pelicula_personal int PRIMARY KEY,
-    pelicula int,
-    personal int,
-    FOREIGN KEY(pelicula) REFERENCES pelicula(id_pelicula),
+
+CREATE TABLE idioma (
+    id_idioma INT PRIMARY KEY AUTO_INCREMENT,
+    idioma VARCHAR(100)
+);
+
+CREATE TABLE pelicula_personal (
+    id_pelicula_personal INT PRIMARY KEY AUTO_INCREMENT,
+    pelicula INT,
+    personal INT,
+    FOREIGN KEY (pelicula) REFERENCES pelicula(id_pelicula),
     FOREIGN KEY (personal) REFERENCES personal(id_personal)
 );
-CREATE TABLE pelicula_genero
-(
-    id_pelicula_genero int PRIMARY KEY,
-    pelicula int,
-    genero int,
+
+CREATE TABLE pelicula_genero (
+    id_pelicula_genero INT PRIMARY KEY AUTO_INCREMENT,
+    pelicula INT,
+    genero INT,
     FOREIGN KEY (pelicula) REFERENCES pelicula(id_pelicula),
     FOREIGN KEY (genero) REFERENCES genero(id_genero)
-);CREATE TABLE pelicula_idioma
-(
-    id_pelicula_idioma int PRIMARY KEY,
-    pelicula int,
-    idioma int,
+);
+
+CREATE TABLE pelicula_idioma (
+    id_pelicula_idioma INT PRIMARY KEY AUTO_INCREMENT,
+    pelicula INT,
+    idioma INT,
     FOREIGN KEY (pelicula) REFERENCES pelicula(id_pelicula),
     FOREIGN KEY (idioma) REFERENCES idioma(id_idioma)
 );
 
--- hasta aqui todo lo relacionado con la pelicula en si
-
-CREATE TABLE usuario
-(
-    id_usuario INT PRIMARY KEY,
-    nombre_usuario varchar(100) not null,
-    tel_usuario varchar(10) not null,
-    correo varchar(255) not null,
-    contrasenia varchar(255) not null,
-    fecha_reg date not null
+-- VERSIÓN CORREGIDA DE LA TABLA USUARIO
+CREATE TABLE usuario (
+    id_usuario INT PRIMARY KEY AUTO_INCREMENT,
+    nombre_usuario VARCHAR(100) NOT NULL,
+    descripcion TEXT NULL,
+    correo VARCHAR(255) NOT NULL UNIQUE,
+    contrasenia VARCHAR(255) NOT NULL,
+    seguidores INT NOT NULL DEFAULT 0, -- CORREGIDO
+    seguidos INT NOT NULL DEFAULT 0,   -- CORREGIDO
+    fecha_reg DATE NOT NULL
 );
-create table resenia
-(
-    id_resenia int PRIMARY key,
-    texte_re text not null,
-    calificacion int CHECK (calificacion BETWEEN 1 and 10),
-    fecha_pub date not null,
-    usuario int not null,
-    pelicula int not null,
-    foreign key(id_usuario) REFERENCES usuario(usuario)
-    	on delete CASCADE on UPDATE CASCADE,
-    FOREIGN KEY (id_pelicula) REFERENCES pelicula(pelicula)
-    	on DELETE CASCADE on UPDATE CASCADE
+
+-- VERSIÓN CORREGIDA DE LA TABLA RESENIA
+CREATE TABLE resenia (
+    id_resenia INT PRIMARY KEY AUTO_INCREMENT,
+    texto_resenia TEXT NOT NULL,
+    calificacion INT CHECK (calificacion BETWEEN 1 AND 10),
+    fecha_pub DATE NOT NULL,
+    usuario INT NOT NULL,
+    pelicula INT NOT NULL,
+    FOREIGN KEY (usuario) REFERENCES usuario(id_usuario)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (pelicula) REFERENCES pelicula(id_pelicula)
+        ON DELETE CASCADE ON UPDATE CASCADE
 );
