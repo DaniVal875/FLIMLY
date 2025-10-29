@@ -28,7 +28,7 @@ body {
   border-radius: 16px;
   padding: 40px;
   text-align: center;
-  box-shadow: 0 0 25px #461561(255, 0, 80, 0.4);
+  box-shadow: 0 0 25px rgba(193, 21, 232, 0.4);
   animation: fadeIn 1s ease;
 }
 
