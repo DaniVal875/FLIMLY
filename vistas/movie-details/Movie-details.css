@@ -152,3 +152,12 @@ body {
   background-color: #723680;
   transform: scale(1.1);
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .movie-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
