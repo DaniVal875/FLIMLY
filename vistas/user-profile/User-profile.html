@@ -1,0 +1,70 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil de Usuario</title>
+  <link rel="stylesheet" href="User-profile.css">
+</head>
+<body>
+  <header class="header">
+    <button class="back-btn" onclick="window.history.back()">⬅</button>
+    <h1>Perfil de Usuario</h1>
+  </header>
+
+  <main class="profile-container">
+    <!-- Info principal -->
+    <div class="profile-info">
+      <img src="https://tse2.mm.bing.net/th/id/OIP.TtQ2FWvwnpv3wFG-Ylin-AHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Foto de perfil" class="profile-pic">
+      <h2>@usuarioEjemplo</h2>
+      <p class="bio">Amante del cine 🎬 | Fan del sci-fi y los thrillers.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div><strong>150</strong><span>Seguidores</span></div>
+      <div><strong>120</strong><span>Siguiendo</span></div>
+      <div><strong>35</strong><span>Publicaciones</span></div>
+    </div>
+
+    <!-- Botón seguir -->
+    <button class="follow-btn">+ Seguir</button>
+
+    <!-- Reseñas -->
+    <section class="reviews">
+      <h3>Reseñas publicadas</h3>
+
+      <div class="review-card">
+        <img src="https://tse4.mm.bing.net/th/id/OIP.szDE7ti_dGFFVN3qjjSkzAAAAA?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Póster película" class="movie-poster">
+        <div class="review-content">
+          <h4>Título de la Película</h4>
+          <p>"Una película impresionante con un final inesperado..."</p>
+          <div class="rating">
+            <span class="circle filled">⭐</span>
+            <span class="circle filled">⭐</span>
+            <span class="circle filled">⭐</span>
+            <span class="circle filled">⭐</span>
+            <span class="circle">⭐</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <img src="https://th.bing.com/th/id/OIP.iBW9_YYzjow-SQRAog3GIgHaEK?o=7&cb=12rm=3&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Póster película" class="movie-poster">
+        <div class="review-content">
+          <h4>Otra Película</h4>
+          <p>"El ritmo fue un poco lento, pero la cinematografía es increíble."</p>
+          <div class="rating">
+            <span class="circle filled">⭐</span>
+            <span class="circle filled">⭐</span>
+            <span class="circle filled">⭐</span>
+            <span class="circle">⭐</span>
+            <span class="circle">⭐</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
+
