@@ -1,0 +1,100 @@
+/* ===== ESTILO GENERAL ===== */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(circle at top, #1a1a1a, #000000);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.welcome-container {
+  text-align: center;
+  padding: 40px;
+  background-color: rgba(30, 30, 30, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 0 25px rgba(114, 54, 128, 0.6);
+  max-width: 400px;
+  width: 90%;
+  animation: fadeIn 1s ease-in;
+}
+
+/* ===== ÍCONO ===== */
+.icon {
+  font-size: 4rem;
+  margin-bottom: 10px;
+  animation: bounce 2s infinite ease-in-out;
+}
+
+/* ===== NOMBRE DE LA APP ===== */
+.app-name {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #723680;
+  letter-spacing: 1px;
+}
+
+/* ===== MENSAJE ===== */
+.welcome-text {
+  font-size: 1rem;
+  margin-bottom: 30px;
+  color: #ddd;
+  line-height: 1.5;
+}
+
+/* ===== BOTONES ===== */
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.btn {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.3s;
+}
+
+/* Botón Iniciar Sesión */
+.login-btn {
+  background-color: #461561;
+  color: #fff;
+}
+
+.login-btn:hover {
+  background-color: #723680;
+  transform: scale(1.05);
+}
+
+/* Botón Registrarse */
+.register-btn {
+  background-color: transparent;
+  border: 2px solid #461561;
+  color: #461561;
+}
+
+.register-btn:hover {
+  background-color: #723680;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}

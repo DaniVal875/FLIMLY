@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resultados de Búsqueda - Filmly</title>
+  <link rel="stylesheet" href="Search-results.css">
+</head>
+<body>
+  <!-- Barra superior con botón de regreso y campo de búsqueda -->
+  <header class="header">
+    <button class="back-btn" onclick="window.history.back()">⬅</button>
+    <div class="search-box">
+      <input type="text" placeholder="Buscar películas o usuarios..." id="searchInput">
+      <button class="search-btn">🔍</button>
+    </div>
+  </header>
+
+  <main class="results-container">
+    <h2>Resultados para: "<span id="searchTerm">Shrek</span>"</h2>
+
+    <!-- Sección de películas -->
+    <section class="results-section">
+      <h3>🎬 Películas</h3>
+      <div class="results-grid">
+        <a href="movie-details.html" class="result-card">
+          <img src="https://tse3.mm.bing.net/th/id/OIP.9npP33_Jz1kMuE-yzXh4eAHaLH?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3text=Película+2" alt="Shrek 2">
+          <p>Shrek 2</p>
+        </a>
+
+        <a href="movie-details.html" class="result-card">
+          <img src="https://tse2.mm.bing.net/th/id/OIP.ko8wfkucjNv-UMuJmVgrEQHaJ4?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3text=Película+3" alt="Son Como Niños">
+          <p>Son Como Niños</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- Sección de usuarios -->
+    <section class="results-section">
+      <h3>👤 Usuarios</h3>
+      <div class="user-results">
+        <a href="../user-profile/User-profile.html" class="user-card">
+          <img src="https://tse2.mm.bing.net/th/id/OIP.8sMdGRdZd_sld-IGS3Kl7gHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Usuario">
+          <div>
+            <h4>@CineFan97</h4>
+            <p>Amante del cine clásico 🎥</p>
+          </div>
+        </a>
+
+        <a href="../user-profile/User-profile.html" class="user-card">
+          <img src="https://tse2.mm.bing.net/th/id/OIP.TtQ2FWvwnpv3wFG-Ylin-AHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Usuario">
+          <div>
+            <h4>@MovieAddict</h4>
+            <p>Fan del terror y las películas indie 💀</p>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

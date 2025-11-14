@@ -42,7 +42,7 @@ body {
   border-radius: 16px;
   width: 100%;
   max-width: 500px;
-  box-shadow: 0 0 20px rgba(255, 0, 80, 0.25);
+  box-shadow: 0 0 20px rgba(215, 39, 255, 0.408);
   animation: fadeIn 0.8s ease;
 }
 
