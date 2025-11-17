@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="Profile.css">
 </head>
 <body>
-  <!-- Barra superior con botón de regreso -->
   <header class="top-bar">
     <button class="back-btn" onclick="window.history.back()" title="Volver">
       ⬅
@@ -15,65 +14,68 @@
     <h1 class="page-title">Perfil</h1>
   </header>
 
-  <!-- Sección de usuario -->
   <section class="profile-info" >
     <div class="avatar">
       <img src="https://tse1.mm.bing.net/th/id/OIP.rAxz10iucNJJPeb6wRPZjAHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Foto de perfil">
     </div>
-    <h2 class="username">Nombre del Usuario</h2>
-    <p class="bio">Amante del cine, compartiendo mis reseñas y descubriendo joyas cinematográficas.</p>
+    
+    <h2 class="username" id="profile-username">Cargando...</h2>
+    <p class="bio" id="profile-bio"></p>
 
     <div class="stats">
       <div class="stat">
-        <span class="number">250</span>
+        <span class="number" id="profile-followers">0</span>
         <span class="label">Seguidores</span>
       </div>
       <div class="stat">
-        <span class="number">180</span>
+        <span class="number" id="profile-following">0</span>
         <span class="label">Siguiendo</span>
       </div>
       <div class="stat">
-        <span class="number">34</span>
+        <span class="number" id="profile-reviews">0</span>
         <span class="label">Publicaciones</span>
       </div>
     </div>
-
     <div class="actions">
       <button class="btn edit" onclick="location.href='../edit-profile/Edit-Profile.html'">✏️ Editar</button>
       <button class="btn share">🔗 Compartir</button>
     </div>
   </section>
 
-  <!-- Galería de reseñas -->
   <section class="reviews">
     <h3 class="section-title">Mis Reseñas</h3>
     <div class="review-grid">
-      <a href="../movie-details/Movie-details.html" class="review-card">
-        <img src="https://tse3.mm.bing.net/th/id/OIP.LpDCrJztwR26HLeLz2yQQgHaEK?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3text=Reseña+1" alt="Reseña 1">
-      </a>
-      <a href="../movie-details/Movie-details.html" class="review-card">
-        <img src="https://tse3.mm.bing.net/th/id/OIP.9npP33_Jz1kMuE-yzXh4eAHaLH?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3text=Reseña+2" alt="Reseña 2">
-      </a>
-      <a href="../movie-details/Movie-details.html" class="review-card">
-        <img src="https://tse2.mm.bing.net/th/id/OIP.ko8wfkucjNv-UMuJmVgrEQHaJ4?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3text=Reseña+3" alt="Reseña 3">
-      </a>
-      <a href="../movie-details/Movie-details.html" class="review-card">
-        <img src="https://tse3.mm.bing.net/th/id/OIP.kz1Io1KjEmcJz9Y-hyP-ngHaLH?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3text=Reseña+4" alt="Reseña 4">
-      </a>
-      <a href="../movie-details/Movie-details.html" class="review-card">
-        <img src="https://th.bing.com/th/id/R.9b13136ac8f19b8c73d9f274b0532d47?rik=Bowbh3bwR5E%2bDQ&pid=ImgRaw&r=0text=Reseña+5" alt="Reseña 5">
-      </a>
-      <a href="../movie-details/Movie-details.html" class="review-card">
-        <img src="https://tse4.mm.bing.net/th/id/OIP.szDE7ti_dGFFVN3qjjSkzAAAAA?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3text=Reseña+6" alt="Reseña 6">
-      </a>
-      <a href="../movie-details/Movie-details.html" class="review-card">
-        <img src="https://tse4.mm.bing.net/th/id/OIP.kxvCppaOBdPysHoDgMen0AHaEp?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3text=Reseña+7" alt="Reseña 7">
-      </a>
-      <a href="../movie-details/Movie-details.html" class="review-card">
-        <img src="https://th.bing.com/th/id/OIP.iBW9_YYzjow-SQRAog3GIgHaEK?o=7&cb=12rm=3&rs=1&pid=ImgDetMain&o=7&rm=3text=Reseña+8" alt="Reseña 8">
-      </a>
-      <!-- Agrega más imágenes según sea necesario -->
-    </div>
+      </div>
   </section>
+
+  <script>
+    // Se ejecuta cuando el HTML está completamente cargado
+    document.addEventListener('DOMContentLoaded', function() {
+      // 1. Llama al controlador de datos que creamos
+      fetch('../../controladores/get_profile_controller.php')
+        .then(response => {
+          if (!response.ok) {
+            // Si el controlador PHP devolvió un error (como 401)
+            // redirigimos al login
+            window.location.href = '../login/Login.html';
+          }
+          return response.json(); // Convierte la respuesta JSON en un objeto JS
+        })
+        .then(data => {
+          // 2. Actualiza el HTML con los datos recibidos
+          if (data) {
+            document.getElementById('profile-username').textContent = data.nombre_usuario || 'Sin nombre';
+            document.getElementById('profile-bio').textContent = data.descripcion || 'Sin descripción.';
+            document.getElementById('profile-followers').textContent = data.seguidores || 0;
+            document.getElementById('profile-following').textContent = data.seguidos || 0;
+            // (Dejamos pendiente el conteo de reseñas)
+          }
+        })
+        .catch(error => {
+          console.error('Error al cargar el perfil:', error);
+          // Opcional: mostrar un mensaje de error al usuario
+        });
+    });
+  </script>
 </body>
 </html>
