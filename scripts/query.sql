@@ -67,19 +67,19 @@ CREATE TABLE pelicula_idioma (
     FOREIGN KEY (idioma) REFERENCES idioma(id_idioma)
 );
 
--- VERSIÓN CORREGIDA DE LA TABLA USUARIO
+
 CREATE TABLE usuario (
     id_usuario INT PRIMARY KEY AUTO_INCREMENT,
     nombre_usuario VARCHAR(100) NOT NULL,
     descripcion TEXT NULL,
     correo VARCHAR(255) NOT NULL UNIQUE,
     contrasenia VARCHAR(255) NOT NULL,
-    seguidores INT NOT NULL DEFAULT 0, -- CORREGIDO
-    seguidos INT NOT NULL DEFAULT 0,   -- CORREGIDO
+    seguidores INT NOT NULL DEFAULT 0, 
+    seguidos INT NOT NULL DEFAULT 0, 
     fecha_reg DATE NOT NULL
 );
 
--- VERSIÓN CORREGIDA DE LA TABLA RESENIA
+
 CREATE TABLE resenia (
     id_resenia INT PRIMARY KEY AUTO_INCREMENT,
     texto_resenia TEXT NOT NULL,
