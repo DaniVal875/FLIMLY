@@ -133,7 +133,13 @@
                         
                         let stars = '';
                         for(let i=1; i<=5; i++) {
-                            stars += i <= review.calificacion ? '<span style="color:#FFC107">⭐</span>' : '<span style="color:#555">⭐</span>';
+                            if (i <= review.calificacion) {
+                                // Estrella amarilla
+                                stars += '<span style="font-size:1.2rem;">⭐</span>';
+                            } else {
+                                // Estrella gris (Filtro aplicado)
+                                stars += '<span style="font-size:1.2rem; filter: grayscale(100%) opacity(0.3);">⭐</span>';
+                            }
                         }
 
                         card.innerHTML = `

@@ -18,6 +18,12 @@
     <div class="movie-details">
       <h2 class="movie-title" id="title">Cargando...</h2>
       
+      <div id="average-container" style="display: flex; align-items: center; margin-bottom: 15px; background: #1e1e1e; padding: 5px 15px; border-radius: 20px; width: fit-content; border: 1px solid #723680;">
+          <span style="font-size: 1.5rem; color: #FFC107; margin-right: 8px;">⭐</span>
+          <span id="avg-score" style="font-size: 1.2rem; font-weight: bold; color: #fff;">--</span>
+          <span style="font-size: 0.9rem; color: #aaa; margin-left: 5px;">/ 5</span>
+      </div>
+
       <p><strong>Director:</strong> <span id="director">...</span></p>
       <p><strong>Estreno:</strong> <span id="year">...</span></p>
       <p><strong>Género:</strong> <span id="genre">...</span></p>
@@ -39,21 +45,19 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // 1. Obtener ID de la película de la URL
       const params = new URLSearchParams(window.location.search);
       const movieId = params.get('id');
 
-      // Configurar el botón de agregar reseña
       const btnAdd = document.getElementById('btn-add-review');
       if (movieId) {
         btnAdd.onclick = () => location.href = `../add-review/Add-review.html?id=${movieId}`;
       } else {
-        btnAdd.style.display = 'none'; // Ocultar si no hay ID
+        btnAdd.style.display = 'none';
         document.getElementById('title').textContent = 'Error: No se seleccionó película';
         return;
       }
 
-      // 2. CARGAR INFO DE LA PELÍCULA
+      // 1. CARGAR INFO DE LA PELÍCULA (Incluyendo Promedio)
       fetch(`../../controladores/get_movie_details_controller.php?id=${movieId}`)
         .then(response => response.json())
         .then(data => {
@@ -66,6 +70,17 @@
                 document.getElementById('genre').textContent = data.generos || 'Sin género';
                 document.getElementById('language').textContent = data.idiomas || 'Desconocido';
                 
+                // === MOSTRAR PROMEDIO ===
+                const scoreElement = document.getElementById('avg-score');
+                if (data.promedio) {
+                    // Convertimos a número y dejamos solo 1 decimal (ej: 4.5)
+                    const promedio = parseFloat(data.promedio).toFixed(1);
+                    scoreElement.textContent = promedio;
+                } else {
+                    scoreElement.textContent = "N/A"; // Si no hay reseñas
+                    scoreElement.style.color = "#888";
+                }
+
                 const img = document.getElementById('poster');
                 img.src = data.imagen || 'https://via.placeholder.com/300x450?text=No+Image';
                 img.onerror = () => img.src = 'https://via.placeholder.com/300x450?text=Error';
@@ -73,30 +88,27 @@
         })
         .catch(err => console.error("Error al cargar detalles:", err));
 
-      // 3. CARGAR RESEÑAS (ESTA ES LA PARTE QUE FALTABA)
+      // 2. CARGAR RESEÑAS (Igual que antes)
       fetch(`../../controladores/get_reviews_controller.php?id=${movieId}`)
         .then(response => response.json())
         .then(reviews => {
             const container = document.getElementById('reviews-container');
-            container.innerHTML = ''; // Limpiar mensaje de "Cargando..."
+            container.innerHTML = '';
 
             if (reviews.length > 0) {
-                // Si hay reseñas, las recorremos y creamos las tarjetas
                 reviews.forEach(review => {
                     const card = document.createElement('div');
                     card.className = 'review-card';
                     
-                    // Generar estrellas (Ej: si calificacion es 4, pone 4 rellenas y 1 vacía)
                     let starsHTML = '';
                     for(let i=1; i<=5; i++) {
                         if (i <= review.calificacion) {
                             starsHTML += '<span class="circle" style="background-color:#723680; color:white;">⭐</span> ';
                         } else {
-                            starsHTML += '<span class="circle empty" style="background-color:#333; color:gray;">⭐</span> ';
+                            starsHTML += '<span class="circle empty" style="background-color:#333; color:gray; filter: grayscale(100%) opacity(0.3);">⭐</span> ';
                         }
                     }
 
-                    // Insertar contenido HTML
                     card.innerHTML = `
                         <div class="review-content" style="width:100%;">
                             <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -115,10 +127,7 @@
                 container.innerHTML = '<p style="color:#aaa;">Aún no hay reseñas para esta película. ¡Sé el primero!</p>';
             }
         })
-        .catch(err => {
-            console.error("Error al cargar reseñas:", err);
-            document.getElementById('reviews-container').innerHTML = '<p>Error al cargar opiniones.</p>';
-        });
+        .catch(err => console.error("Error al cargar reseñas:", err));
     });
   </script>
 </body>

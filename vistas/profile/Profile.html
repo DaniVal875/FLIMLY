@@ -88,20 +88,18 @@
                     card.href = `../movie-details/Movie-details.html?id=${review.id_pelicula}`;
                     card.className = 'review-card'; // Clase principal
                     
-                    // Generar estrellas (círculos morados/amarillos como en tu imagen)
+                    // Generar estrellas
                     let starsHTML = '';
                     for(let i=1; i<=5; i++) {
-                        // Si i es menor o igual a la calificación, estrella llena (amarilla/morada)
-                        // Si no, vacía o gris. Usaremos emojis para asegurar color rápido o spans con estilo.
-                        // Basado en tu imagen, parecen iconos sólidos.
                         if(i <= review.calificacion) {
-                             starsHTML += '<span style="color: #FFC107; margin-right:2px;">⭐</span>'; 
+                             // ESTRELLA LLENA (Amarilla normal)
+                             starsHTML += '<span style="font-size:1.2rem;">⭐</span>'; 
                         } else {
-                             starsHTML += '<span style="color: #555; margin-right:2px;">⭐</span>'; 
+                             // ESTRELLA VACÍA (Usamos filtro para ponerla GRIS)
+                             starsHTML += '<span style="font-size:1.2rem; filter: grayscale(100%) opacity(0.3);">⭐</span>'; 
                         }
                     }
 
-                    // ESTRUCTURA EXACTA DE TU IMAGEN
                     card.innerHTML = `
                         <img src="${review.imagen || 'https://via.placeholder.com/80x120'}" 
                              alt="${review.nombre_pelicula}" 
@@ -109,9 +107,7 @@
                         
                         <div class="review-content">
                             <h4>${review.nombre_pelicula}</h4>
-                            
                             <p class="review-text">"${review.texto_resenia}"</p>
-                            
                             <div class="rating">${starsHTML}</div>
                         </div>
                     `;
