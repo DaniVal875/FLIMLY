@@ -13,58 +13,103 @@
   </header>
 
   <main class="profile-container">
-    <!-- Info principal -->
     <div class="profile-info">
-      <img src="https://tse2.mm.bing.net/th/id/OIP.TtQ2FWvwnpv3wFG-Ylin-AHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Foto de perfil" class="profile-pic">
-      <h2>@usuarioEjemplo</h2>
-      <p class="bio">Amante del cine 🎬 | Fan del sci-fi y los thrillers.</p>
+      <img src="" id="profile-pic" alt="Foto de perfil" class="profile-pic">
+      
+      <h2 id="username">Cargando...</h2>
+      <p class="bio" id="bio">...</p>
     </div>
 
-    <!-- Stats -->
     <div class="stats">
-      <div><strong>150</strong><span>Seguidores</span></div>
-      <div><strong>120</strong><span>Siguiendo</span></div>
-      <div><strong>35</strong><span>Publicaciones</span></div>
+      <div><strong id="followers">0</strong><span>Seguidores</span></div>
+      <div><strong id="following">0</strong><span>Siguiendo</span></div>
+      <div><strong id="review-count">0</strong><span>Publicaciones</span></div>
     </div>
 
-    <!-- Botón seguir -->
-    <button class="follow-btn">+ Seguir</button>
+    <button class="follow-btn" onclick="alert('Función Seguir próximamente')">+ Seguir</button>
 
-    <!-- Reseñas -->
     <section class="reviews">
       <h3>Reseñas publicadas</h3>
-
-      <div class="review-card">
-        <img src="https://tse4.mm.bing.net/th/id/OIP.szDE7ti_dGFFVN3qjjSkzAAAAA?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Póster película" class="movie-poster">
-        <div class="review-content">
-          <h4>Título de la Película</h4>
-          <p>"Una película impresionante con un final inesperado..."</p>
-          <div class="rating">
-            <span class="circle filled">⭐</span>
-            <span class="circle filled">⭐</span>
-            <span class="circle filled">⭐</span>
-            <span class="circle filled">⭐</span>
-            <span class="circle">⭐</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="review-card">
-        <img src="https://th.bing.com/th/id/OIP.iBW9_YYzjow-SQRAog3GIgHaEK?o=7&cb=12rm=3&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Póster película" class="movie-poster">
-        <div class="review-content">
-          <h4>Otra Película</h4>
-          <p>"El ritmo fue un poco lento, pero la cinematografía es increíble."</p>
-          <div class="rating">
-            <span class="circle filled">⭐</span>
-            <span class="circle filled">⭐</span>
-            <span class="circle filled">⭐</span>
-            <span class="circle">⭐</span>
-            <span class="circle">⭐</span>
-          </div>
-        </div>
+      <div id="user-reviews-container">
+          <p style="color:#ccc">Cargando actividad...</p>
       </div>
     </section>
   </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Obtener ID de la URL
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get('id');
+
+        if (!userId) {
+            document.getElementById('username').textContent = "Usuario no especificado";
+            return;
+        }
+
+        // 2. Cargar DATOS DEL PERFIL PÚBLICO
+        fetch(`../../controladores/get_public_profile_controller.php?id=${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('username').textContent = "Usuario no encontrado";
+                } else {
+                    document.getElementById('username').textContent = "@" + data.nombre_usuario;
+                    document.getElementById('bio').textContent = data.descripcion || "Sin descripción.";
+                    document.getElementById('followers').textContent = data.seguidores;
+                    document.getElementById('following').textContent = data.seguidos;
+                    
+                    // === LÓGICA DE FOTO DE PERFIL ===
+                    const img = document.getElementById('profile-pic');
+                    
+                    // Generar avatar por defecto con la inicial
+                    const letter = data.nombre_usuario ? data.nombre_usuario.charAt(0).toUpperCase() : 'U';
+                    const defaultAvatar = `https://via.placeholder.com/150/461561/ffffff?text=${letter}`;
+                    
+                    // Usar la foto real si existe, si no, usar el default
+                    // También agregamos onerror por si la URL de la foto está rota
+                    img.src = data.foto_perfil || defaultAvatar;
+                    img.onerror = function() {
+                        this.src = defaultAvatar;
+                    };
+                }
+            })
+            .catch(err => console.error("Error perfil:", err));
+
+        // 3. Cargar RESEÑAS DEL USUARIO (Esto sigue igual)
+        fetch(`../../controladores/get_user_reviews_controller.php?id=${userId}`)
+            .then(response => response.json())
+            .then(reviews => {
+                const container = document.getElementById('user-reviews-container');
+                container.innerHTML = ''; 
+                document.getElementById('review-count').textContent = reviews.length;
+
+                if (reviews.length > 0) {
+                    reviews.forEach(review => {
+                        const card = document.createElement('div');
+                        card.className = 'review-card';
+                        
+                        let stars = '';
+                        for(let i=1; i<=5; i++) {
+                            stars += i <= review.calificacion ? '<span class="circle filled">⭐</span>' : '<span class="circle">⭐</span>';
+                        }
+
+                        card.innerHTML = `
+                            <img src="${review.imagen || 'https://via.placeholder.com/100x150'}" alt="Póster" class="movie-poster">
+                            <div class="review-content">
+                                <h4>${review.nombre_pelicula}</h4>
+                                <p>"${review.texto_resenia}"</p>
+                                <div class="rating">${stars}</div>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
+                } else {
+                    container.innerHTML = '<p style="color:#aaa">Este usuario no ha publicado reseñas aún.</p>';
+                }
+            })
+            .catch(err => console.error("Error reseñas:", err));
+    });
+  </script>
 </body>
 </html>
-

@@ -6,24 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CineReseñas - Inicio</title>
   <link rel="stylesheet" href="Home.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
   <header class="top-bar">
-    <h1 class="logo">🎬 CineReseñas</h1>
-    <div class="search-box">
-      <input type="text" placeholder="Buscar películas..." id="searchInput">
-      <button onclick="buscar()">🔍</button>
-    </div>
+    <h1 class="logo">🎬 Filmly</h1>
+    
+    <button class="search-nav-btn" onclick="location.href='../search-results/Search-results.html'"> 🔍
+    </button>
   </header>
-  <script>
-    function buscar() {
-      const query = document.getElementById("searchInput").value;
-        if (query.trim() !== "") {
-            window.location.href = `../search-results/Search-results.html?query=${encodeURIComponent(query)}`;
-        }
-    }
-  </script>
 
   <main class="movies-section">
     
@@ -45,15 +37,18 @@
   </nav>
 
   <script>
-    // Función auxiliar para crear tarjetas de película
+    // Función auxiliar para crear el HTML de una tarjeta de película
     function createMovieCard(movie) {
         const card = document.createElement('a');
+        // El enlace lleva al detalle pasando el ID
         card.href = `../movie-details/Movie-details.html?id=${movie.id_pelicula}`;
         card.className = 'movie-card';
 
         const img = document.createElement('img');
+        // Si no hay imagen, usa un placeholder
         img.src = movie.imagen || 'https://via.placeholder.com/200x300?text=No+Image';
         img.alt = movie.nombre;
+        // Si la imagen falla al cargar, pone una por defecto
         img.onerror = () => img.src = 'https://via.placeholder.com/200x300?text=Error';
 
         const title = document.createElement('p');
@@ -65,7 +60,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-      // Llamamos al nuevo controlador dinámico
+      // Llamamos al controlador que nos da populares y género sorpresa
       fetch('../../controladores/get_home_dynamic.php')
         .then(response => response.json())
         .then(data => {
@@ -95,88 +90,15 @@
               genreGrid.appendChild(createMovieCard(movie));
             });
           } else {
-             // Si por azar sale un género sin películas, ocultamos la sección o mostramos mensaje
              genreTitle.textContent = "Explora nuestro catálogo";
              genreGrid.innerHTML = '<p>No se encontraron recomendaciones específicas hoy.</p>';
           }
 
         })
         .catch(error => {
-          console.error('Error:', error);
+          console.error('Error al cargar el Home:', error);
         });
     });
   </script>
 </body>
 </html>
-// ... (código HTML anterior sigue igual) ...
-
-  <script>
-    function irAAgregarResena() {
-        const params = new URLSearchParams(window.location.search);
-        const movieId = params.get('id');
-        // Si hay ID, vamos al formulario de agregar reseña
-        if(movieId) location.href = `../add-review/Add-review.html?id=${movieId}`;
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      const params = new URLSearchParams(window.location.search);
-      const movieId = params.get('id');
-
-      if (!movieId) return;
-
-      // 1. CARGAR INFO DE LA PELÍCULA (Igual que antes)
-      fetch(`../../controladores/get_movie_details_controller.php?id=${movieId}`)
-        .then(response => response.json())
-        .then(data => {
-            if (!data.error) {
-                document.getElementById('title').textContent = data.nombre;
-                document.getElementById('desc').textContent = data.sinopsis;
-                document.getElementById('year').textContent = data.fecha_estreno;
-                document.getElementById('duration').textContent = data.duracion;
-                document.getElementById('director').textContent = data.directores || 'Desconocido';
-                document.getElementById('genre').textContent = data.generos || 'Sin género';
-                document.getElementById('language').textContent = data.idiomas || 'Desconocido';
-                
-                const img = document.getElementById('poster');
-                img.src = data.imagen || 'https://via.placeholder.com/300x450?text=No+Image';
-            }
-        });
-
-      // 2. CARGAR RESEÑAS (NUEVO)
-      fetch(`../../controladores/get_reviews_controller.php?id=${movieId}`)
-        .then(response => response.json())
-        .then(reviews => {
-            const container = document.getElementById('reviews-container');
-            container.innerHTML = ''; // Limpiar mensaje de carga
-
-            if (reviews.length > 0) {
-                reviews.forEach(review => {
-                    // Crear HTML de la tarjeta de reseña
-                    const card = document.createElement('div');
-                    card.className = 'review-card';
-                    
-                    // Generamos las estrellas visualmente
-                    let starsHTML = '';
-                    for(let i=1; i<=5; i++) {
-                        // Si la calificacion es sobre 10, dividimos entre 2. Si es sobre 5, se deja igual.
-                        // Asumiendo que guardas del 1 al 5 en el formulario:
-                        starsHTML += i <= review.calificacion ? '<span class="circle">⭐</span>' : '<span class="circle empty">⭐</span>';
-                    }
-
-                    card.innerHTML = `
-                        <div class="review-content">
-                            <h4 class="username">@${review.nombre_usuario} <small style="color:#aaa; font-weight:normal;">(${review.fecha_pub})</small></h4>
-                            <div class="rating">
-                                ${starsHTML}
-                            </div>
-                            <p>${review.texto_resenia}</p>
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
-            } else {
-                container.innerHTML = '<p>Aún no hay reseñas. ¡Sé el primero en opinar!</p>';
-            }
-        });
-    });
-  </script>

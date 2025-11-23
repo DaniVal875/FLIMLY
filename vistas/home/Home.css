@@ -5,6 +5,8 @@ body {
   color: white;
   margin: 0;
   padding: 0;
+  /* Espacio extra abajo para que el menú no tape contenido */
+  padding-bottom: 80px; 
 }
 
 /* Barra superior */
@@ -14,38 +16,38 @@ body {
   align-items: center;
   background-color: #2e2e2e;
   padding: 12px 20px;
-  border-bottom: 2px solid #290038;
+  border-bottom: 2px solid #461561;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .logo {
   font-size: 1.4em;
   color: #723680;
+  margin: 0;
 }
 
-/* Buscador */
-.search-box {
-  display: flex;
-  align-items: center;
-}
-
-.search-box input {
-  padding: 8px 12px;
-  border-radius: 6px 0 0 6px;
-  border: none;
-  width: 220px;
-}
-
-.search-box button {
-  padding: 8px 12px;
-  background-color: #461561;
-  border: none;
-  border-radius: 0 6px 6px 0;
-  color: white;
+/* Botón de búsqueda (Solo icono GRANDE) */
+.search-nav-btn {
+  /* Quitamos el fondo y bordes */
+  background-color: transparent; /* Quita el color blanco de fondo */
+  border: none;                  /* Quita el borde gris */
+  
+  /* Hacemos el icono grande */
+  font-size: 2.5rem; /* Aumenta este número si lo quieres aún más grande */
+  
+  /* Quitamos el padding para que sea solo el icono */
+  padding: 0; 
+  
   cursor: pointer;
+  /* Transición suave al pasar el mouse */
+  transition: transform 0.2s ease;
 }
 
-.search-box button:hover {
-  background-color: #723680;
+.search-nav-btn:hover {
+  /* Al pasar el mouse, lo hacemos crecer un poco */
+  transform: scale(1.15);
 }
 
 /* Sección de películas */
@@ -54,14 +56,18 @@ body {
 }
 
 .section-title {
-  font-size: 1.6em;
+  font-size: 1.5em;
   margin-bottom: 15px;
+  margin-top: 10px;
+  border-left: 4px solid #723680;
+  padding-left: 10px;
 }
 
 /* Grid de películas */
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  /* Responsivo: crea tantas columnas como quepan (mínimo 140px de ancho cada una) */
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 15px;
 }
 
@@ -70,32 +76,40 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #000000;
+  background-color: #1a1a1a;
   border-radius: 10px;
   text-decoration: none;
   color: white;
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 100%; /* Para que todas tengan la misma altura si están en fila */
 }
 
 .movie-card:hover {
-  transform: scale(1.04);
+  transform: scale(1.03);
   box-shadow: 0 0 15px rgba(175, 33, 223, 0.5);
+  z-index: 10;
 }
 
-/* 🔧 IMÁGENES IGUALES */
+/* Imágenes */
 .movie-card img {
   width: 100%;
-  height: 240px;       /* Tamaño uniforme */
-  object-fit: cover;   /* Ajusta sin deformar */
+  height: 220px;       /* Altura fija para uniformidad */
+  object-fit: cover;   /* Recorta la imagen para llenar el espacio */
   border-bottom: 2px solid #723680;
 }
 
 /* Títulos de películas */
 .movie-card p {
-  margin: 10px 0;
+  margin: 10px 5px;
+  font-size: 0.9rem;
   font-weight: 500;
   text-align: center;
+  /* Limita el texto a 2 líneas para que no rompa el diseño */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* Menú inferior */
@@ -108,28 +122,29 @@ body {
   justify-content: space-around;
   padding: 12px 0;
   border-top: 2px solid #723680;
+  z-index: 100;
 }
 
 .menu-item {
   font-size: 1.5em;
   color: white;
   text-decoration: none;
+  transition: color 0.3s;
 }
 
 .menu-item:hover {
   color: #723680;
+  transform: scale(1.1);
 }
 
-
-/* Responsive */
+/* Responsive para pantallas grandes */
 @media (min-width: 768px) {
-  .top-bar {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+  .movie-grid {
+    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   }
-
-  .search-box {
-    width: 300px;
+  
+  .movie-card img {
+    height: 250px;
   }
 }

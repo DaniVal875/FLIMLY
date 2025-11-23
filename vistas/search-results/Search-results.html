@@ -7,55 +7,113 @@
   <link rel="stylesheet" href="Search-results.css">
 </head>
 <body>
-  <!-- Barra superior con botón de regreso y campo de búsqueda -->
   <header class="header">
     <button class="back-btn" onclick="window.history.back()">⬅</button>
     <div class="search-box">
       <input type="text" placeholder="Buscar películas o usuarios..." id="searchInput">
-      <button class="search-btn">🔍</button>
+      <button class="search-btn" onclick="realizarBusqueda()">🔍</button>
     </div>
   </header>
 
   <main class="results-container">
-    <h2>Resultados para: "<span id="searchTerm">Shrek</span>"</h2>
+    <h2>Resultados para: "<span id="searchTerm">...</span>"</h2>
 
-    <!-- Sección de películas -->
     <section class="results-section">
       <h3>🎬 Películas</h3>
-      <div class="results-grid">
-        <a href="movie-details.html" class="result-card">
-          <img src="https://tse3.mm.bing.net/th/id/OIP.9npP33_Jz1kMuE-yzXh4eAHaLH?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3text=Película+2" alt="Shrek 2">
-          <p>Shrek 2</p>
-        </a>
-
-        <a href="movie-details.html" class="result-card">
-          <img src="https://tse2.mm.bing.net/th/id/OIP.ko8wfkucjNv-UMuJmVgrEQHaJ4?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3text=Película+3" alt="Son Como Niños">
-          <p>Son Como Niños</p>
-        </a>
+      <div class="results-grid" id="movies-grid">
+        <p style="color:#ccc">Buscando...</p>
       </div>
     </section>
 
-    <!-- Sección de usuarios -->
     <section class="results-section">
       <h3>👤 Usuarios</h3>
-      <div class="user-results">
-        <a href="../user-profile/User-profile.html" class="user-card">
-          <img src="https://tse2.mm.bing.net/th/id/OIP.8sMdGRdZd_sld-IGS3Kl7gHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Usuario">
-          <div>
-            <h4>@CineFan97</h4>
-            <p>Amante del cine clásico 🎥</p>
-          </div>
-        </a>
-
-        <a href="../user-profile/User-profile.html" class="user-card">
-          <img src="https://tse2.mm.bing.net/th/id/OIP.TtQ2FWvwnpv3wFG-Ylin-AHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Usuario">
-          <div>
-            <h4>@MovieAddict</h4>
-            <p>Fan del terror y las películas indie 💀</p>
-          </div>
-        </a>
+      <div class="user-results" id="users-grid">
+         <p style="color:#ccc">Buscando...</p>
       </div>
     </section>
   </main>
+
+  <script>
+    function realizarBusqueda() {
+        const query = document.getElementById('searchInput').value;
+        if(query.trim()) {
+            window.location.href = `Search-results.html?query=${encodeURIComponent(query)}`;
+        }
+    }
+
+    document.getElementById('searchInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') realizarBusqueda();
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const params = new URLSearchParams(window.location.search);
+        const query = params.get('query');
+
+        if (!query) return;
+
+        document.getElementById('searchTerm').textContent = query;
+        document.getElementById('searchInput').value = query;
+
+        fetch(`../../controladores/search_controller.php?query=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                
+                // --- A. RENDERIZAR PELÍCULAS ---
+                const moviesGrid = document.getElementById('movies-grid');
+                moviesGrid.innerHTML = '';
+                if (data.movies && data.movies.length > 0) {
+                    data.movies.forEach(movie => {
+                        const card = document.createElement('a');
+                        card.href = `../movie-details/Movie-details.html?id=${movie.id_pelicula}`;
+                        card.className = 'result-card';
+                        
+                        const imgUrl = movie.imagen || 'https://via.placeholder.com/200x300?text=No+Img';
+                        
+                        card.innerHTML = `
+                            <img src="${imgUrl}" onerror="this.src='https://via.placeholder.com/200x300?text=Error'">
+                            <p>${movie.nombre}</p>
+                        `;
+                        moviesGrid.appendChild(card);
+                    });
+                } else {
+                    moviesGrid.innerHTML = '<p style="color:#888;">No se encontraron películas.</p>';
+                }
+
+                // --- B. RENDERIZAR USUARIOS ---
+                const usersGrid = document.getElementById('users-grid');
+                usersGrid.innerHTML = '';
+
+                if (data.users && data.users.length > 0) {
+                    data.users.forEach(user => {
+                        const userCard = document.createElement('a');
+                        userCard.href = `../user-profile/User-profile.html?id=${user.id_usuario}`; 
+                        userCard.className = 'user-card';
+
+                        // === LÓGICA DE FOTO DE PERFIL ===
+                        // 1. Generamos un avatar por defecto con su inicial
+                        const letter = user.nombre_usuario.charAt(0).toUpperCase();
+                        const defaultAvatar = 'https://via.placeholder.com/100/461561/ffffff?text=' + letter;
+                        
+                        // 2. Si tiene foto en BD la usamos, si no, usamos el default
+                        const avatarUrl = user.foto_perfil || defaultAvatar;
+
+                        userCard.innerHTML = `
+                            <img src="${avatarUrl}" alt="Avatar" onerror="this.src='${defaultAvatar}'">
+                            <div>
+                                <h4>@${user.nombre_usuario}</h4>
+                                <p>${user.seguidores} seguidores</p>
+                            </div>
+                        `;
+                        usersGrid.appendChild(userCard);
+                    });
+                } else {
+                    usersGrid.innerHTML = '<p style="color:#888;">No se encontraron usuarios.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+  </script>
 </body>
 </html>

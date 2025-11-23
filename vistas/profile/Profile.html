@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Filmly - Perfil</title>
+  <title>Filmly - Mi Perfil</title>
   <link rel="stylesheet" href="Profile.css">
 </head>
 <body>
   <header class="top-bar">
-    <button class="back-btn" onclick="window.history.back()" title="Volver">
+    <button class="back-btn" onclick="window.location.href='../home/Home.html'" title="Volver al inicio">
       ⬅
     </button>
-    <h1 class="page-title">Perfil</h1>
+    <h1 class="page-title">Mi Perfil</h1>
   </header>
 
   <section class="profile-info" >
     <div class="avatar">
-      <img src="https://tse1.mm.bing.net/th/id/OIP.rAxz10iucNJJPeb6wRPZjAHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Foto de perfil">
+      <img src="" alt="Foto de perfil">
     </div>
     
     <h2 class="username" id="profile-username">Cargando...</h2>
-    <p class="bio" id="profile-bio"></p>
+    <p class="bio" id="profile-bio">...</p>
 
     <div class="stats">
       <div class="stat">
@@ -32,10 +32,11 @@
         <span class="label">Siguiendo</span>
       </div>
       <div class="stat">
-        <span class="number" id="profile-reviews">0</span>
+        <span class="number" id="profile-reviews-count">0</span>
         <span class="label">Publicaciones</span>
       </div>
     </div>
+
     <div class="actions">
       <button class="btn edit" onclick="location.href='../edit-profile/Edit-Profile.html'">✏️ Editar</button>
       <button class="btn share">🔗 Compartir</button>
@@ -44,37 +45,83 @@
 
   <section class="reviews">
     <h3 class="section-title">Mis Reseñas</h3>
-    <div class="review-grid">
-      </div>
+    <div class="review-list" id="my-reviews-container">
+      <p style="text-align:center; color:#888;">Cargando tus reseñas...</p>
+    </div>
   </section>
 
   <script>
-    // Se ejecuta cuando el HTML está completamente cargado
     document.addEventListener('DOMContentLoaded', function() {
-      // 1. Llama al controlador de datos que creamos
+      
+      // 1. CARGAR DATOS DEL PERFIL
       fetch('../../controladores/get_profile_controller.php')
         .then(response => {
-          if (!response.ok) {
-            // Si el controlador PHP devolvió un error (como 401)
-            // redirigimos al login
-            window.location.href = '../login/Login.html';
-          }
-          return response.json(); // Convierte la respuesta JSON en un objeto JS
+          if (!response.ok) window.location.href = '../login/Login.html';
+          return response.json();
         })
         .then(data => {
-          // 2. Actualiza el HTML con los datos recibidos
           if (data) {
-            document.getElementById('profile-username').textContent = data.nombre_usuario || 'Sin nombre';
+            document.getElementById('profile-username').textContent = data.nombre_usuario || 'Usuario';
             document.getElementById('profile-bio').textContent = data.descripcion || 'Sin descripción.';
             document.getElementById('profile-followers').textContent = data.seguidores || 0;
             document.getElementById('profile-following').textContent = data.seguidos || 0;
-            // (Dejamos pendiente el conteo de reseñas)
+            
+            const img = document.querySelector('.avatar img');
+            img.src = data.foto_perfil || "https://tse1.mm.bing.net/th/id/OIP.rAxz10iucNJJPeb6wRPZjAHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3";
+            img.onerror = function() { this.src = "https://tse1.mm.bing.net/th/id/OIP.rAxz10iucNJJPeb6wRPZjAHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3"; };
           }
         })
-        .catch(error => {
-          console.error('Error al cargar el perfil:', error);
-          // Opcional: mostrar un mensaje de error al usuario
-        });
+        .catch(error => console.error('Error perfil:', error));
+
+      // 2. CARGAR MIS RESEÑAS
+      fetch('../../controladores/get_my_reviews_controller.php')
+        .then(response => response.json())
+        .then(reviews => {
+            const container = document.getElementById('my-reviews-container');
+            container.innerHTML = ''; 
+
+            document.getElementById('profile-reviews-count').textContent = reviews.length;
+
+            if (reviews.length > 0) {
+                reviews.forEach(review => {
+                    const card = document.createElement('a');
+                    card.href = `../movie-details/Movie-details.html?id=${review.id_pelicula}`;
+                    card.className = 'review-card'; // Clase principal
+                    
+                    // Generar estrellas (círculos morados/amarillos como en tu imagen)
+                    let starsHTML = '';
+                    for(let i=1; i<=5; i++) {
+                        // Si i es menor o igual a la calificación, estrella llena (amarilla/morada)
+                        // Si no, vacía o gris. Usaremos emojis para asegurar color rápido o spans con estilo.
+                        // Basado en tu imagen, parecen iconos sólidos.
+                        if(i <= review.calificacion) {
+                             starsHTML += '<span style="color: #FFC107; margin-right:2px;">⭐</span>'; 
+                        } else {
+                             starsHTML += '<span style="color: #555; margin-right:2px;">⭐</span>'; 
+                        }
+                    }
+
+                    // ESTRUCTURA EXACTA DE TU IMAGEN
+                    card.innerHTML = `
+                        <img src="${review.imagen || 'https://via.placeholder.com/80x120'}" 
+                             alt="${review.nombre_pelicula}" 
+                             class="movie-poster"> 
+                        
+                        <div class="review-content">
+                            <h4>${review.nombre_pelicula}</h4>
+                            
+                            <p class="review-text">"${review.texto_resenia}"</p>
+                            
+                            <div class="rating">${starsHTML}</div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } else {
+                container.innerHTML = '<p style="text-align:center; color:#aaa; margin-top:20px;">No hay reseñas publicadas.</p>';
+            }
+        })
+        .catch(error => console.error('Error reseñas:', error));
     });
   </script>
 </body>

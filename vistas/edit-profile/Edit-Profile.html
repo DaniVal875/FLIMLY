@@ -33,24 +33,23 @@
   </main>
 
   <script>
-    // Se ejecuta cuando el HTML está cargado
     document.addEventListener('DOMContentLoaded', function() {
-      // 1. Llama al MISMO controlador de antes para OBTENER los datos
+      // Cargar datos actuales para editar
       fetch('../../controladores/get_profile_controller.php')
         .then(response => {
-          if (!response.ok) {
-            window.location.href = '../login/Login.html';
-          }
+          if (!response.ok) window.location.href = '../login/Login.html';
           return response.json();
         })
         .then(data => {
-          // 2. Rellena los campos del formulario con los datos
           if (data) {
             document.getElementById('name').value = data.nombre_usuario || '';
             document.getElementById('bio').textContent = data.descripcion || '';
+            
+            // Rellenar el campo de FOTO
+            document.getElementById('photo').value = data.foto_perfil || '';
           }
         })
-        .catch(error => console.error('Error al cargar datos para editar:', error));
+        .catch(error => console.error('Error al cargar datos:', error));
     });
   </script>
 </body>
