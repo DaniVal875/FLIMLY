@@ -7,66 +7,74 @@
   <link rel="stylesheet" href="Movie-details.css">
 </head>
 <body>
-  <!-- Barra superior con botón de regreso -->
   <header class="top-bar">
     <button class="back-btn" onclick="window.history.back()" title="Volver">⬅</button>
     <h1 class="page-title">Detalle de Película</h1>
   </header>
 
-  <!-- Información principal de la película -->
   <section class="movie-info">
-    <img src="https://tse3.mm.bing.net/th/id/OIP.LpDCrJztwR26HLeLz2yQQgHaEK?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3"
-         alt="Película" class="movie-poster">
+    <img src="" alt="Cargando..." class="movie-poster" id="poster">
+    
     <div class="movie-details">
-      <h2 class="movie-title">Nombre de la Película</h2>
-      <p><strong>Año:</strong> 2024</p>
-      <p><strong>Género:</strong> Drama / Suspenso</p>
-      <p><strong>Duración:</strong> 2h 10m</p>
-      <p class="movie-desc">Sinopsis de la película: Una historia emocionante sobre el poder de las decisiones y el destino.</p>
+      <h2 class="movie-title" id="title">Cargando...</h2>
+      
+      <p><strong>Director:</strong> <span id="director">...</span></p>
+      <p><strong>Estreno:</strong> <span id="year">...</span></p>
+      <p><strong>Género:</strong> <span id="genre">...</span></p>
+      <p><strong>Idioma:</strong> <span id="language">...</span></p>
+      <p><strong>Duración:</strong> <span id="duration">...</span> min</p>
+      
+      <p class="movie-desc" id="desc">Cargando sinopsis...</p>
     </div>
   </section>
 
-  <!-- Reseñas -->
   <section class="reviews">
     <h3 class="section-title">Reseñas de la Comunidad</h3>
-
-    <div class="review-card">
-      <a href="../user-profile/User-profile.html" class="profile-pic">
-        <img src="https://tse2.mm.bing.net/th/id/OIP.TtQ2FWvwnpv3wFG-Ylin-AHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Usuario 1">
-      </a>
-      <div class="review-content">
-        <h4 class="username">Usuario 1</h4>
-        <div class="rating">
-          <span class="circle">⭐</span>
-          <span class="circle">⭐</span>
-          <span class="circle">⭐</span>
-          <span class="circle">⭐</span>
-          <span class="circle empty">⭐</span>
-        </div>
-        <p>¡Excelente película! El guion es espectacular y las actuaciones son muy convincentes.</p>
-      </div>
-    </div>
-
-    <div class="review-card">
-      <a href="../user-profile/User-profile.html" class="profile-pic">
-        <img src="https://tse1.mm.bing.net/th/id/OIP.rAxz10iucNJJPeb6wRPZjAHaHa?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Usuario 2">
-      </a>
-      <div class="review-content">
-        <h4 class="username">Usuario 2</h4>
-        <div class="rating">
-          <span class="circle">⭐</span>
-          <span class="circle">⭐</span>
-          <span class="circle">⭐</span>
-          <span class="circle empty">⭐</span>
-          <span class="circle empty">⭐</span>
-        </div>
-        <p>Buena historia, aunque algo predecible en ciertas partes.</p>
-      </div>
+    <div id="reviews-container">
+        <p style="color:#ccc">Próximamente: Reseñas reales...</p>
     </div>
   </section>
 
-  <!-- Botón flotante para agregar reseña -->
-  <button class="add-review-btn" title="Agregar reseña" onclick="location.href='../add-review/Add-review.html'">➕</button>
+  <button class="add-review-btn" title="Agregar reseña" onclick="irAAgregarResena()">➕</button>
+
+  <script>
+    function irAAgregarResena() {
+        const params = new URLSearchParams(window.location.search);
+        const movieId = params.get('id');
+        if(movieId) location.href = `../add-review/Add-review.html?id=${movieId}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const params = new URLSearchParams(window.location.search);
+      const movieId = params.get('id');
+
+      if (!movieId) return;
+
+      fetch(`../../controladores/get_movie_details_controller.php?id=${movieId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                document.getElementById('title').textContent = 'Película no encontrada';
+            } else {
+                // Rellenar datos básicos
+                document.getElementById('title').textContent = data.nombre;
+                document.getElementById('desc').textContent = data.sinopsis;
+                document.getElementById('year').textContent = data.fecha_estreno;
+                document.getElementById('duration').textContent = data.duracion;
+
+                // === RELLENAR DATOS NUEVOS (Vienen separados por comas desde SQL) ===
+                document.getElementById('director').textContent = data.directores || 'Desconocido';
+                document.getElementById('genre').textContent = data.generos || 'Sin género';
+                document.getElementById('language').textContent = data.idiomas || 'Desconocido';
+
+                // Imagen
+                const img = document.getElementById('poster');
+                img.src = data.imagen || 'https://via.placeholder.com/300x450?text=No+Image';
+                img.onerror = () => img.src = 'https://via.placeholder.com/300x450?text=Error';
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+  </script>
 </body>
 </html>
-
