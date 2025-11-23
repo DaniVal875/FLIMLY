@@ -26,11 +26,17 @@
   </script>
 
   <main class="movies-section">
-    <h2 class="section-title">Películas Populares</h2>
     
-    <div class="movie-grid" id="movie-grid">
-      <p style="color: #ccc;">Cargando películas...</p>
+    <h2 class="section-title">🔥 Películas Populares</h2>
+    <div class="movie-grid" id="popular-grid">
+      <p style="color: #ccc;">Cargando populares...</p>
     </div>
+
+    <br><br> <h2 class="section-title" id="dynamic-genre-title">✨ Descubre más</h2>
+    <div class="movie-grid" id="genre-grid">
+      <p style="color: #ccc;">Buscando recomendaciones...</p>
+    </div>
+
   </main>
 
   <nav class="bottom-menu">
@@ -39,50 +45,64 @@
   </nav>
 
   <script>
+    // Función auxiliar para crear tarjetas de película
+    function createMovieCard(movie) {
+        const card = document.createElement('a');
+        card.href = `../movie-details/Movie-details.html?id=${movie.id_pelicula}`;
+        card.className = 'movie-card';
+
+        const img = document.createElement('img');
+        img.src = movie.imagen || 'https://via.placeholder.com/200x300?text=No+Image';
+        img.alt = movie.nombre;
+        img.onerror = () => img.src = 'https://via.placeholder.com/200x300?text=Error';
+
+        const title = document.createElement('p');
+        title.textContent = movie.nombre;
+
+        card.appendChild(img);
+        card.appendChild(title);
+        return card;
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
-      // 1. Llamamos al controlador que creamos
-      fetch('../../controladores/get_movies_controller.php')
+      // Llamamos al nuevo controlador dinámico
+      fetch('../../controladores/get_home_dynamic.php')
         .then(response => response.json())
         .then(data => {
-          const grid = document.getElementById('movie-grid');
-          grid.innerHTML = ''; // Limpiamos el mensaje de "Cargando..."
-
-          // 2. Verificamos si hay películas
-          if (data.length > 0) {
-            // 3. Recorremos cada película recibida de la base de datos
-            data.forEach(movie => {
-              // Creamos el enlace de la tarjeta
-              const card = document.createElement('a');
-              // Nota: Agregamos el ID a la URL para usarlo después en los detalles
-              card.href = `../movie-details/Movie-details.html?id=${movie.id_pelicula}`;
-              card.className = 'movie-card';
-
-              // Creamos la imagen
-              const img = document.createElement('img');
-              img.src = movie.imagen || 'https://via.placeholder.com/200x300?text=No+Image'; // Imagen por defecto si falla
-              img.alt = movie.nombre;
-              
-              // Si la imagen falla al cargar, ponemos una por defecto
-              img.onerror = function() { 
-                this.src = 'https://via.placeholder.com/200x300?text=Error+Img'; 
-              };
-
-              // Creamos el título
-              const title = document.createElement('p');
-              title.textContent = movie.nombre;
-
-              // 4. Juntamos todo y lo agregamos al grid
-              card.appendChild(img);
-              card.appendChild(title);
-              grid.appendChild(card);
+          
+          // 1. Rellenar Sección POPULARES
+          const popularGrid = document.getElementById('popular-grid');
+          popularGrid.innerHTML = ''; // Limpiar mensaje de carga
+          
+          if (data.populares && data.populares.length > 0) {
+            data.populares.forEach(movie => {
+              popularGrid.appendChild(createMovieCard(movie));
             });
           } else {
-            grid.innerHTML = '<p>No se encontraron películas en la base de datos.</p>';
+              popularGrid.innerHTML = '<p>No hay películas populares disponibles.</p>';
           }
+
+          // 2. Rellenar Sección GÉNERO DINÁMICO
+          const genreGrid = document.getElementById('genre-grid');
+          const genreTitle = document.getElementById('dynamic-genre-title');
+          genreGrid.innerHTML = ''; // Limpiar mensaje
+
+          if (data.genero_titulo && data.genero_peliculas.length > 0) {
+            // Actualizamos el título (Ej: "Películas de Terror")
+            genreTitle.textContent = `Películas de ${data.genero_titulo}`;
+            
+            data.genero_peliculas.forEach(movie => {
+              genreGrid.appendChild(createMovieCard(movie));
+            });
+          } else {
+             // Si por azar sale un género sin películas, ocultamos la sección o mostramos mensaje
+             genreTitle.textContent = "Explora nuestro catálogo";
+             genreGrid.innerHTML = '<p>No se encontraron recomendaciones específicas hoy.</p>';
+          }
+
         })
         .catch(error => {
-          console.error('Error al cargar películas:', error);
-          document.getElementById('movie-grid').innerHTML = '<p>Error al cargar el contenido.</p>';
+          console.error('Error:', error);
         });
     });
   </script>
