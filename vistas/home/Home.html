@@ -108,3 +108,75 @@
   </script>
 </body>
 </html>
+// ... (código HTML anterior sigue igual) ...
+
+  <script>
+    function irAAgregarResena() {
+        const params = new URLSearchParams(window.location.search);
+        const movieId = params.get('id');
+        // Si hay ID, vamos al formulario de agregar reseña
+        if(movieId) location.href = `../add-review/Add-review.html?id=${movieId}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const params = new URLSearchParams(window.location.search);
+      const movieId = params.get('id');
+
+      if (!movieId) return;
+
+      // 1. CARGAR INFO DE LA PELÍCULA (Igual que antes)
+      fetch(`../../controladores/get_movie_details_controller.php?id=${movieId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (!data.error) {
+                document.getElementById('title').textContent = data.nombre;
+                document.getElementById('desc').textContent = data.sinopsis;
+                document.getElementById('year').textContent = data.fecha_estreno;
+                document.getElementById('duration').textContent = data.duracion;
+                document.getElementById('director').textContent = data.directores || 'Desconocido';
+                document.getElementById('genre').textContent = data.generos || 'Sin género';
+                document.getElementById('language').textContent = data.idiomas || 'Desconocido';
+                
+                const img = document.getElementById('poster');
+                img.src = data.imagen || 'https://via.placeholder.com/300x450?text=No+Image';
+            }
+        });
+
+      // 2. CARGAR RESEÑAS (NUEVO)
+      fetch(`../../controladores/get_reviews_controller.php?id=${movieId}`)
+        .then(response => response.json())
+        .then(reviews => {
+            const container = document.getElementById('reviews-container');
+            container.innerHTML = ''; // Limpiar mensaje de carga
+
+            if (reviews.length > 0) {
+                reviews.forEach(review => {
+                    // Crear HTML de la tarjeta de reseña
+                    const card = document.createElement('div');
+                    card.className = 'review-card';
+                    
+                    // Generamos las estrellas visualmente
+                    let starsHTML = '';
+                    for(let i=1; i<=5; i++) {
+                        // Si la calificacion es sobre 10, dividimos entre 2. Si es sobre 5, se deja igual.
+                        // Asumiendo que guardas del 1 al 5 en el formulario:
+                        starsHTML += i <= review.calificacion ? '<span class="circle">⭐</span>' : '<span class="circle empty">⭐</span>';
+                    }
+
+                    card.innerHTML = `
+                        <div class="review-content">
+                            <h4 class="username">@${review.nombre_usuario} <small style="color:#aaa; font-weight:normal;">(${review.fecha_pub})</small></h4>
+                            <div class="rating">
+                                ${starsHTML}
+                            </div>
+                            <p>${review.texto_resenia}</p>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } else {
+                container.innerHTML = '<p>Aún no hay reseñas. ¡Sé el primero en opinar!</p>';
+            }
+        });
+    });
+  </script>
