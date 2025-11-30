@@ -6,89 +6,157 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CineReseñas - Inicio</title>
   <link rel="stylesheet" href="Home.css">
-  <!-- Puedes usar iconos emoji o librerías como FontAwesome si lo prefieres -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
-  <!-- Barra superior con buscador -->
   <header class="top-bar">
-    <h1 class="logo">🎬 CineReseñas</h1>
-    <div class="search-box">
-      <input type="text" placeholder="Buscar películas...">
-      <button onclick="buscar()">🔍</button>
-    </div>
+    <h1 class="logo">🎬 Filmly</h1>
+    <button class="search-nav-btn" onclick="location.href='../search-results/Search-results.html'" aria-label="Buscar">
+      🔍
+    </button>
   </header>
-  <script>
-    function buscar() {
-      const query = document.getElementById("searchInput").value;
-        if (query.trim() !== "") {
-            window.location.href = `../search-results/Search-results.html?query=${encodeURIComponent(query)}`;
-        }
-    }
-  </script>
 
-  <!-- Contenedor principal de películas -->
   <main class="movies-section">
-    <h2 class="section-title">Películas Populares</h2>
-    <div class="movie-grid">
-      <!-- Cada película es un enlace clicable -->
-      <a href="#" class="movie-card">
-        <img
-          src="https://tse3.mm.bing.net/th/id/OIP.LpDCrJztwR26HLeLz2yQQgHaEK?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3text=Película+1"
-          alt="Película 1">
-        <p>Terrifier</p>
-      </a>
-      <a href="../movie-details/Movie-details.html" class="movie-card">
-        <img
-          src="https://tse3.mm.bing.net/th/id/OIP.9npP33_Jz1kMuE-yzXh4eAHaLH?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3text=Película+2"
-          alt="Película 2">
-        <p>Shrek 2</p>
-      </a>
-      <a href="../movie-details/Movie-details.html" class="movie-card">
-        <img
-          src="https://tse2.mm.bing.net/th/id/OIP.ko8wfkucjNv-UMuJmVgrEQHaJ4?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3text=Película+3"
-          alt="Película 3">
-        <p>Son Como Niños</p>
-      </a>
-      <a href="../movie-details/Movie-details.html" class="movie-card">
-        <img
-          src="https://tse3.mm.bing.net/th/id/OIP.kz1Io1KjEmcJz9Y-hyP-ngHaLH?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3text=Película+4"
-          alt="Película 4">
-        <p>Iron Man 3</p>
-      </a>
-      <a href="../movie-details/Movie-details.html" class="movie-card">
-        <img
-          src="https://th.bing.com/th/id/R.9b13136ac8f19b8c73d9f274b0532d47?rik=Bowbh3bwR5E%2bDQ&pid=ImgRaw&r=0text=Película+5"
-          alt="Película 5">
-        <p>Rambo</p>
-      </a>
-      <a href="../movie-details/Movie-details.html" class="movie-card">
-        <img
-          src="https://tse4.mm.bing.net/th/id/OIP.szDE7ti_dGFFVN3qjjSkzAAAAA?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3text=Película+6"
-          alt="Película 6">
-        <p>Misión de Rescate 2</p>
-      </a>
-      <a href="../movie-details/Movie-details.html" class="movie-card">
-        <img
-          src="https://tse4.mm.bing.net/th/id/OIP.kxvCppaOBdPysHoDgMen0AHaEp?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3text=Película+7"
-          alt="Película 7">
-        <p>It (Eso)</p>
-      </a>
-      <a href="../movie-details/Movie-details.html" class="movie-card">
-        <img
-          src="https://th.bing.com/th/id/OIP.iBW9_YYzjow-SQRAog3GIgHaEK?o=7&cb=12rm=3&rs=1&pid=ImgDetMain&o=7&rm=3text=Película+8"
-          alt="Película 8">
-        <p>¿Y Dónde Están Las Rubias?</p>
-      </a>
-      <!-- Agrega más tarjetas de películas según sea necesario -->
+    
+    <h2 class="section-title">🔥 Películas Populares</h2>
+    <div class="movie-grid" id="popular-grid">
+      <p style="color: #ccc;">Cargando populares...</p>
     </div>
+
+    <br><br>
+
+    <h2 class="section-title" id="dynamic-genre-title">✨ Descubre más</h2>
+    <div class="movie-grid" id="genre-grid">
+      <p style="color: #ccc;">Buscando recomendaciones...</p>
+    </div>
+
+    <br><br>
+
+    <h2 class="section-title" id="decade-title">🕰️ Viaje en el tiempo</h2>
+    <div class="movie-grid" id="decade-grid">
+        <p style="color: #ccc;">Cargando clásicos...</p>
+    </div>
+
+    <div id="social-feed" style="margin-top: 40px;">
+        </div>
+
   </main>
 
-  <!-- Menú inferior de iconos -->
   <nav class="bottom-menu">
     <a onclick="location.href='../profile/Profile.html'" class="menu-item" title="Perfil">👤</a>
     <a onclick="location.href='../logout/Logout.html'" class="menu-item" title="Salir">🚪</a>
   </nav>
-</body>
 
+  <script>
+    // Función para crear tarjetas
+    function createMovieCard(movie) {
+        const card = document.createElement('a');
+        card.href = `../movie-details/Movie-details.html?id=${movie.id_pelicula}`;
+        card.className = 'movie-card';
+
+        const img = document.createElement('img');
+        img.src = movie.imagen || 'https://via.placeholder.com/200x300?text=No+Image';
+        img.alt = movie.nombre;
+        img.onerror = () => img.src = 'https://via.placeholder.com/200x300?text=Error';
+
+        const title = document.createElement('p');
+        title.textContent = movie.nombre;
+
+        card.appendChild(img);
+        card.appendChild(title);
+        return card;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      // A. CARGA POPULARES Y GÉNERO
+      fetch('../../controladores/get_home_dynamic.php')
+        .then(response => response.json())
+        .then(data => {
+          // Populares
+          const popularGrid = document.getElementById('popular-grid');
+          popularGrid.innerHTML = '';
+          if (data.populares && data.populares.length > 0) {
+            data.populares.forEach(movie => popularGrid.appendChild(createMovieCard(movie)));
+          }
+
+          // Género
+          const genreGrid = document.getElementById('genre-grid');
+          const genreTitle = document.getElementById('dynamic-genre-title');
+          genreGrid.innerHTML = '';
+          if (data.genero_titulo && data.genero_peliculas.length > 0) {
+            genreTitle.textContent = `Películas de ${data.genero_titulo}`;
+            data.genero_peliculas.forEach(movie => genreGrid.appendChild(createMovieCard(movie)));
+          } else {
+             genreTitle.textContent = "Explora nuestro catálogo";
+          }
+        });
+
+      // B. CARGA POR DÉCADA (NUEVO)
+      fetch('../../controladores/get_movies_by_decade_controller.php')
+        .then(response => response.json())
+        .then(data => {
+            const decadeGrid = document.getElementById('decade-grid');
+            const decadeTitle = document.getElementById('decade-title');
+            decadeGrid.innerHTML = '';
+
+            if (data.movies && data.movies.length > 0) {
+                decadeTitle.textContent = `🕰️ ${data.titulo}`; // Ej: Cine de los 2000
+                data.movies.forEach(movie => decadeGrid.appendChild(createMovieCard(movie)));
+            } else {
+                decadeGrid.innerHTML = '<p>No se encontraron películas de esta época hoy.</p>';
+            }
+        });
+
+      // C. CARGA SOCIAL (3 AMIGOS)
+      fetch('../../controladores/get_followed_reviews_controller.php')
+        .then(response => response.json())
+        .then(amigos => {
+            const socialFeed = document.getElementById('social-feed');
+            socialFeed.innerHTML = ''; // Limpiar
+
+            if (amigos.length > 0) {
+                // Agregamos un título general si hay actividad
+                const mainTitle = document.createElement('h2');
+                mainTitle.className = 'section-title';
+                mainTitle.textContent = '👥 Actividad de amigos';
+                socialFeed.appendChild(mainTitle);
+
+                // Iteramos sobre cada amigo encontrado
+                amigos.forEach(data => {
+                    // 1. Contenedor para este amigo
+                    const friendSection = document.createElement('div');
+                    friendSection.style.marginBottom = '30px';
+
+                    // 2. Cabecera del amigo (Avatar + Nombre)
+                    const letter = data.user.nombre_usuario.charAt(0).toUpperCase();
+                    const avatarUrl = data.user.foto_perfil || `https://via.placeholder.com/40/461561/ffffff?text=${letter}`;
+                    
+                    friendSection.innerHTML = `
+                        <a href="../user-profile/User-profile.html?id=${data.user.id_usuario}" 
+                           style="text-decoration: none; display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                             <img src="${avatarUrl}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #723680;">
+                             <span style="color: #ddd; font-weight: bold; font-size: 1.1rem;">@${data.user.nombre_usuario}</span>
+                             <span style="color: #888; font-size: 0.9rem;">ha reseñado:</span>
+                        </a>
+                    `;
+
+                    // 3. Grid de sus películas
+                    const grid = document.createElement('div');
+                    grid.className = 'movie-grid'; // Reutilizamos tu clase CSS de grid
+                    
+                    data.movies.forEach(movie => {
+                        grid.appendChild(createMovieCard(movie));
+                    });
+
+                    friendSection.appendChild(grid);
+                    socialFeed.appendChild(friendSection);
+                });
+            }
+        })
+        .catch(err => console.error("Error cargando social:", err));
+    });
+  </script>
+</body>
 </html>

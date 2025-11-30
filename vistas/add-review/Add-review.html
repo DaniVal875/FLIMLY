@@ -13,37 +13,91 @@
   </header>
 
   <main class="review-container">
-    <!-- Imagen de la película -->
     <div class="movie-poster">
-      <img src="https://tse3.mm.bing.net/th/id/OIP.LpDCrJztwR26HLeLz2yQQgHaEK?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Póster de la película">
-      <h2>Título de la Película</h2>
+      <img src="" alt="Cargando..." id="poster">
+      <h2 id="movie-title">Cargando...</h2>
     </div>
 
-    <!-- Formulario -->
-    <form class="review-form">
+    <form class="review-form" id="review-form">
+      <input type="hidden" id="id_pelicula" name="id_pelicula">
+
       <label for="review-text">Tu reseña:</label>
-      <textarea id="review-text" placeholder="Escribe aquí tu opinión..."></textarea>
+      <textarea id="review-text" name="review_text" placeholder="Escribe aquí tu opinión..." required></textarea>
 
       <label>Calificación:</label>
       <div class="rating">
-        <input type="radio" id="star5" name="rating" value="5">
-        <label for="star5" class="circle">⭐</label>
-
-        <input type="radio" id="star4" name="rating" value="4">
-        <label for="star4" class="circle">⭐</label>
-
-        <input type="radio" id="star3" name="rating" value="3">
-        <label for="star3" class="circle">⭐</label>
-
-        <input type="radio" id="star2" name="rating" value="2">
-        <label for="star2" class="circle">⭐</label>
-
-        <input type="radio" id="star1" name="rating" value="1">
-        <label for="star1" class="circle">⭐</label>
+        <input type="radio" id="star5" name="rating" value="5"><label for="star5" class="circle">⭐</label>
+        <input type="radio" id="star4" name="rating" value="4"><label for="star4" class="circle">⭐</label>
+        <input type="radio" id="star3" name="rating" value="3"><label for="star3" class="circle">⭐</label>
+        <input type="radio" id="star2" name="rating" value="2"><label for="star2" class="circle">⭐</label>
+        <input type="radio" id="star1" name="rating" value="1"><label for="star1" class="circle">⭐</label>
       </div>
 
       <button type="submit" class="submit-btn">Enviar Reseña</button>
     </form>
   </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Obtener el ID de la película desde la URL actual
+        const params = new URLSearchParams(window.location.search);
+        const movieId = params.get('id');
+        
+        // Validación: Si no hay ID, regresamos al usuario porque no sabe qué reseñar
+        if(!movieId) {
+            alert("Error: No se seleccionó ninguna película.");
+            window.history.back();
+            return;
+        }
+
+        // Asignamos el ID al input oculto para que se envíe con el formulario
+        document.getElementById('id_pelicula').value = movieId;
+
+        // 2. Cargar datos visuales (Póster y Título) para que el usuario sepa qué está reseñando
+        fetch(`../../controladores/get_movie_details_controller.php?id=${movieId}`)
+            .then(res => res.json())
+            .then(data => {
+                if(!data.error) {
+                    document.getElementById('movie-title').textContent = data.nombre;
+                    // Si la imagen falla o es nula, ponemos una por defecto
+                    document.getElementById('poster').src = data.imagen || 'https://via.placeholder.com/200x300?text=No+Img';
+                    document.getElementById('poster').onerror = function() {
+                        this.src = 'https://via.placeholder.com/200x300?text=Error';
+                    };
+                } else {
+                    document.getElementById('movie-title').textContent = "Película no encontrada";
+                }
+            })
+            .catch(err => console.error("Error cargando detalles:", err));
+
+        // 3. Manejar el envío del formulario
+        document.getElementById('review-form').addEventListener('submit', function(e) {
+            e.preventDefault(); // Evitamos recarga de página
+            
+            const formData = new FormData(this);
+
+            fetch('../../controladores/add_review_controller.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    // === ÉXITO ===
+                    // Redirigimos a la pantalla de éxito PASANDO EL ID DE LA PELÍCULA
+                    // Esto es vital para que el botón "Volver" sepa a dónde regresar
+                    window.location.href = `../review-success/Review-success.html?id=${movieId}`;
+                } else {
+                    // Error del servidor (ej: sesión expirada, campos vacíos)
+                    alert("Error: " + data.message);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Error de conexión al enviar la reseña.");
+            });
+        });
+    });
+  </script>
 </body>
 </html>

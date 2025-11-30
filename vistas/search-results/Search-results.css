@@ -18,7 +18,7 @@ body {
   align-items: center;
   padding: 10px 15px;
   background: #000000;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .back-btn {
@@ -147,4 +147,83 @@ body {
 .user-card p {
   font-size: 0.9rem;
   color: #ddd;
+}
+
+/* ===== SECCIÓN DE GÉNEROS (Rediseñado) ===== */
+.genres-section {
+  display: flex;
+  flex-direction: column;
+  /* Apila el botón sobre la lista */
+  align-items: flex-end;
+  /* <--- ESTO LO MUEVE A LA DERECHA */
+  margin: 15px 0 25px 0;
+  /* Margen arriba y abajo */
+  width: 100%;
+}
+
+/* El botón ahora parece un "Chip" o filtro */
+.toggle-genres-btn {
+  background-color: #2e2e2e;
+  border: 1px solid #444;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  /* Bordes muy redondeados */
+  transition: all 0.3s ease;
+}
+
+.toggle-genres-btn:hover {
+  background-color: #461561;
+  /* Color morado al pasar el mouse */
+  border-color: #723680;
+  transform: translateY(-2px);
+}
+
+/* Lista de géneros (se despliega debajo) */
+.genres-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  /* Los géneros también se alinean a la derecha */
+  gap: 10px;
+  margin-top: 15px;
+  width: 100%;
+  animation: slideDown 0.4s ease forwards;
+}
+
+/* Botones individuales de cada género */
+.genre-chip {
+  background-color: #1a1a1a;
+  color: #ccc;
+  border: 1px solid #333;
+  padding: 6px 14px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+
+.genre-chip:hover {
+  background-color: #723680;
+  color: #fff;
+  border-color: #964CA7;
+}
+
+/* Animación de despliegue */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
