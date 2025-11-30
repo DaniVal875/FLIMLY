@@ -1,13 +1,14 @@
-/* Reset y fuente */
+/* Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", sans-serif;
 }
 
+/* Fondo */
 body {
-  background: linear-gradient(135deg, #0d0d0d, #1a1a1a, #262626);
+  background: linear-gradient(135deg, #000, #000000);
   color: #fff;
   height: 100vh;
   display: flex;
@@ -16,45 +17,34 @@ body {
 }
 
 /* Contenedor */
-.logout-container {
+.success-container {
   width: 100%;
   max-width: 500px;
   padding: 20px;
 }
 
 /* Tarjeta */
-.logout-card {
-  background: #111;
-  border-radius: 16px;
+.success-card {
+  background: #2e2e2e;
   padding: 40px;
+  border-radius: 16px;
   text-align: center;
-  box-shadow: 0 0 25px rgba(193, 21, 232, 0.4);
+  box-shadow: 0 0 25px rgba(150, 29, 221, 0.588);
   animation: fadeIn 1s ease;
 }
 
-/* Títulos */
-.title {
-  font-size: 2rem;
-  margin-bottom: 10px;
-  color: #461561;
-}
-
-.subtitle {
-  font-size: 1rem;
+/* Título */
+.success-card h1 {
+  font-size: 1.8rem;
   margin-bottom: 15px;
-  color: #fff;
+  color: #723680;
 }
 
-.subtitle span {
-  color: #964CA7;
-  font-weight: bold;
-}
-
-.message {
-  font-size: 0.95rem;
+/* Texto */
+.success-card p {
+  font-size: 1rem;
   margin-bottom: 25px;
-  line-height: 1.5;
-  color: #fff;
+  color: #ddd;
 }
 
 /* Botón */
@@ -66,11 +56,12 @@ body {
   color: #fff;
   text-decoration: none;
   font-size: 1rem;
+  font-weight: bold;
   transition: background 0.3s ease;
 }
 
 .btn:hover {
-  background: #290038;
+  background: #723680;
 }
 
 /* Animación */

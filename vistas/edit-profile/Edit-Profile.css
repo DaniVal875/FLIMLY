@@ -1,0 +1,114 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: #0d0d0d;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Barra superior */
+.top-bar {
+  background: #111;
+  padding: 15px 20px;
+  box-shadow: 0 0 10px rgba(255, 0, 80, 0.3);
+}
+
+.page-title {
+  font-size: 1.4rem;
+  color: #723680;
+  text-align: center;
+}
+
+/* Contenedor del formulario */
+.edit-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 30px 20px;
+}
+
+.edit-form {
+  background: #111;
+  padding: 30px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 0 20px rgba(215, 39, 255, 0.408);
+  animation: fadeIn 0.8s ease;
+}
+
+.edit-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #461561;
+  font-size: 0.95rem;
+}
+
+.edit-form input,
+.edit-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  background: #222;
+  color: #fff;
+  transition: border 0.3s ease;
+}
+
+.edit-form input:focus,
+.edit-form textarea:focus {
+  border: 2px solid #723680;
+}
+
+/* Botones */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+
+.cancel {
+  background: #333;
+  color: #fff;
+}
+
+.cancel:hover {
+  background: #444;
+}
+
+.save {
+  background: #461561;
+  color: #fff;
+}
+
+.save:hover {
+  background: #723680;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

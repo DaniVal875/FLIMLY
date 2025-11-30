@@ -1,0 +1,162 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil de Usuario</title>
+  <link rel="stylesheet" href="User-profile.css">
+</head>
+<body>
+  <header class="header">
+    <button class="back-btn" onclick="window.history.back()">⬅</button>
+    <h1>Perfil de Usuario</h1>
+  </header>
+
+  <main class="profile-container">
+    <div class="profile-info">
+      <img src="" id="profile-pic" alt="Foto de perfil" class="profile-pic">
+      <h2 id="username">Cargando...</h2>
+      <p class="bio" id="bio">...</p>
+    </div>
+
+    <div class="stats">
+      <div><strong id="followers">0</strong><span>Seguidores</span></div>
+      <div><strong id="following">0</strong><span>Siguiendo</span></div>
+      <div><strong id="review-count">0</strong><span>Publicaciones</span></div>
+    </div>
+
+    <button id="follow-btn" class="follow-btn">+ Seguir</button>
+
+    <section class="reviews">
+      <h3>Reseñas publicadas</h3>
+      <div id="user-reviews-container">
+          <p style="color:#ccc">Cargando actividad...</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get('id'); // ID del perfil que visitamos
+
+        if (!userId) {
+            document.getElementById('username').textContent = "Usuario no especificado";
+            return;
+        }
+
+        // 1. CARGAR DATOS DEL PERFIL
+        fetch(`../../controladores/get_public_profile_controller.php?id=${userId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (!data.error) {
+                    document.getElementById('username').textContent = "@" + data.nombre_usuario;
+                    document.getElementById('bio').textContent = data.descripcion || "Sin descripción.";
+                    document.getElementById('followers').textContent = data.seguidores;
+                    document.getElementById('following').textContent = data.seguidos;
+                    
+                    const letter = data.nombre_usuario ? data.nombre_usuario.charAt(0).toUpperCase() : 'U';
+                    const defaultAvatar = `https://via.placeholder.com/150/461561/ffffff?text=${letter}`;
+                    const img = document.getElementById('profile-pic');
+                    img.src = data.foto_perfil || defaultAvatar;
+                    img.onerror = () => img.src = defaultAvatar;
+                }
+            });
+
+        // 2. VERIFICAR ESTADO DE SEGUIMIENTO (¿Ya lo sigo?)
+        const followBtn = document.getElementById('follow-btn');
+        
+        fetch(`../../controladores/check_follow_status.php?id=${userId}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.following) {
+                    actualizarBotonSeguir(true);
+                } else {
+                    actualizarBotonSeguir(false);
+                }
+            });
+
+        // 3. EVENTO CLIC EN BOTÓN SEGUIR
+        followBtn.addEventListener('click', function() {
+            const formData = new FormData();
+            formData.append('id_usuario_a_seguir', userId);
+
+            fetch('../../controladores/follow_controller.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    // Actualizamos el número de seguidores visualmente
+                    document.getElementById('followers').textContent = data.nuevos_seguidores;
+                    
+                    // Cambiamos el estilo del botón
+                    if(data.action === 'followed') {
+                        actualizarBotonSeguir(true);
+                    } else {
+                        actualizarBotonSeguir(false);
+                    }
+                } else {
+                    alert("Error: " + (data.error || "No se pudo completar la acción"));
+                    if(data.error === 'No has iniciado sesión') window.location.href = '../login/Login.html';
+                }
+            })
+            .catch(err => console.error(err));
+        });
+
+        // Función auxiliar para cambiar estilo del botón
+        function actualizarBotonSeguir(siguiendo) {
+            if(siguiendo) {
+                followBtn.textContent = "Siguiendo";
+                followBtn.style.backgroundColor = "#2e2e2e"; // Color gris oscuro (Ya lo sigues)
+                followBtn.style.border = "1px solid #723680";
+            } else {
+                followBtn.textContent = "+ Seguir";
+                followBtn.style.backgroundColor = "#461561"; // Color original (No lo sigues)
+                followBtn.style.border = "none";
+            }
+        }
+
+        // 4. CARGAR RESEÑAS (Código anterior que ya funciona)
+        fetch(`../../controladores/get_user_reviews_controller.php?id=${userId}`)
+            .then(res => res.json())
+            .then(reviews => {
+                const container = document.getElementById('user-reviews-container');
+                container.innerHTML = '';
+                document.getElementById('review-count').textContent = reviews.length;
+
+                if (reviews.length > 0) {
+                    reviews.forEach(review => {
+                        const card = document.createElement('div');
+                        card.className = 'review-card';
+                        
+                        let stars = '';
+                        for(let i=1; i<=5; i++) {
+                            if (i <= review.calificacion) {
+                                // Estrella amarilla
+                                stars += '<span style="font-size:1.2rem;">⭐</span>';
+                            } else {
+                                // Estrella gris (Filtro aplicado)
+                                stars += '<span style="font-size:1.2rem; filter: grayscale(100%) opacity(0.3);">⭐</span>';
+                            }
+                        }
+
+                        card.innerHTML = `
+                            <img src="${review.imagen || 'https://via.placeholder.com/80x120'}" class="movie-poster">
+                            <div class="review-content">
+                                <h4>${review.nombre_pelicula}</h4>
+                                <p class="review-text">"${review.texto_resenia}"</p>
+                                <div class="rating">${stars}</div>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
+                } else {
+                    container.innerHTML = '<p style="color:#aaa">Sin actividad reciente.</p>';
+                }
+            });
+    });
+  </script>
+</body>
+</html>

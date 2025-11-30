@@ -12,24 +12,55 @@
       <h1 class="title">🎬 Filmly</h1>
       <p class="subtitle">Comenta, califica y comparte tus películas favoritas</p>
       
-      <form class="login-form">
+      <form class="login-form" id="login-form">
         <div class="input-group">
           <label for="email">Correo electrónico</label>
-          <input type="email" id="email" placeholder="ejemplo@correo.com" required />
+          <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required />
         </div>
         <div class="input-group">
           <label for="password">Contraseña</label>
-          <input type="password" id="password" placeholder="••••••••" required />
+          <input type="password" id="password" name="password" placeholder="••••••••" required />
         </div>
         
         <button type="submit" class="btn">Iniciar sesión</button>
       </form>
       
       <p class="extra">
-        ¿No tienes cuenta? <a href="Registro.html">Regístrate</a><br />
-        ¿Olvidaste tu contraseña? <a href="Recover.html">Recupérala aquí</a>
+        ¿No tienes cuenta? <a onclick="location.href='../registro/Registro.html'">Regístrate</a><br />
+        ¿Olvidaste tu contraseña? <a onclick="location.href='../recover/Recover.html'">Recupérala aquí</a>
       </p>
     </div>
   </div>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', function(event) {
+      
+      // 1. Prevenimos que la página se recargue
+      event.preventDefault();
+      
+      const formData = new FormData(this);
+      
+      // 2. Enviamos los datos al controlador
+      fetch('../../controladores/login_controller.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        // 3. Leemos la respuesta JSON (la que viste en tu imagen)
+        if (data.success) {
+          // Si es true, vamos al Home
+          window.location.href = '../home/Home.html';
+        } else {
+          // Si es false, mostramos el popup
+          alert(data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Ocurrió un error de conexión.');
+      });
+    });
+  </script>
 </body>
 </html>

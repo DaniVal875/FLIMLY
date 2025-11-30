@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineReseñas - Editar Perfil</title>
+  <link rel="stylesheet" href="Edit-Profile.css">
+</head>
+<body>
+  <header class="top-bar">
+    <h1 class="page-title">Editar Perfil</h1>
+  </header>
+
+  <main class="edit-container">
+    
+    <form class="edit-form" action="../../controladores/edit_profile_controller.php" method="post">
+      
+      <label for="name">Nombre</label>
+      <input type="text" id="name" name="name" value="Cargando...">
+
+      <label for="bio">Descripción</label>
+      <textarea id="bio" name="bio" rows="4">Cargando...</textarea>
+
+      <label for="photo">Foto de perfil (URL)</label>
+      <input type="url" id="photo" name="photo" placeholder="https://...">
+
+      <div class="form-actions">
+        <button type="button" class="btn cancel" onclick="location.href='../profile/Profile.html'">Cancelar</button>
+        
+        <button type="submit" class="btn save">Guardar</button>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Cargar datos actuales para editar
+      fetch('../../controladores/get_profile_controller.php')
+        .then(response => {
+          if (!response.ok) window.location.href = '../login/Login.html';
+          return response.json();
+        })
+        .then(data => {
+          if (data) {
+            document.getElementById('name').value = data.nombre_usuario || '';
+            document.getElementById('bio').textContent = data.descripcion || '';
+            
+            // Rellenar el campo de FOTO
+            document.getElementById('photo').value = data.foto_perfil || '';
+          }
+        })
+        .catch(error => console.error('Error al cargar datos:', error));
+    });
+  </script>
+</body>
+</html>

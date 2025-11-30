@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agregar Reseña</title>
+  <link rel="stylesheet" href="Add-review.css">
+</head>
+
+<body>
+  <header class="header">
+    <button class="back-btn" onclick="window.history.back()">⬅</button>
+    <h1>Agregar Reseña</h1>
+  </header>
+
+  <main class="review-container">
+    <div class="movie-poster">
+      <img src="" alt="Cargando..." id="poster">
+      <h2 id="movie-title">Cargando...</h2>
+    </div>
+
+    <form class="review-form" id="review-form">
+      <input type="hidden" id="id_pelicula" name="id_pelicula">
+
+      <label for="review-text">Tu reseña:</label>
+      <textarea id="review-text" name="review_text" placeholder="Escribe aquí tu opinión..." required></textarea>
+
+      <label>Calificación:</label>
+      <div class="rating">
+        <input type="radio" id="star5" name="rating" value="5"><label for="star5" class="circle">⭐</label>
+        <input type="radio" id="star4" name="rating" value="4"><label for="star4" class="circle">⭐</label>
+        <input type="radio" id="star3" name="rating" value="3"><label for="star3" class="circle">⭐</label>
+        <input type="radio" id="star2" name="rating" value="2"><label for="star2" class="circle">⭐</label>
+        <input type="radio" id="star1" name="rating" value="1"><label for="star1" class="circle">⭐</label>
+      </div>
+
+      <button type="submit" class="submit-btn">Enviar Reseña</button>
+    </form>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const params = new URLSearchParams(window.location.search);
+      const movieId = params.get('id');
+
+      if (!movieId) {
+        alert("Error: No se seleccionó ninguna película.");
+        window.history.back();
+        return;
+      }
+
+      document.getElementById('id_pelicula').value = movieId;
+
+      // Cargar datos visuales
+      fetch(`../../controladores/get_movie_details_controller.php?id=${movieId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.error) {
+            document.getElementById('movie-title').textContent = data.nombre;
+            document.getElementById('poster').src = data.imagen || 'https://via.placeholder.com/200x300?text=No+Img';
+            document.getElementById('poster').onerror = function () {
+              this.src = 'https://via.placeholder.com/200x300?text=Error';
+            };
+          } else {
+            document.getElementById('movie-title').textContent = "Película no encontrada";
+          }
+        })
+        .catch(err => console.error("Error cargando detalles:", err));
+
+      // Manejar envío
+      document.getElementById('review-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+
+        fetch('../../controladores/add_review_controller.php', {
+          method: 'POST',
+          body: formData
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              // === AQUÍ ESTÁ EL CAMBIO CLAVE ===
+              // Usamos .replace() para borrar este formulario del historial.
+              // Así, al volver atrás desde la siguiente pantalla, no caeremos aquí de nuevo.
+              window.location.replace(`../review-success/Review-success.html?id=${movieId}`);
+            } else {
+              alert("Error: " + data.message);
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            alert("Error de conexión al enviar la reseña.");
+          });
+      });
+    });
+  </script>
+</body>
+
+</html>
