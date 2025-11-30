@@ -1,8 +1,6 @@
 <?php
-// 1. Incluir conexión
 include '../conexion.php'; //
 
-// 2. Respuesta JSON
 header('Content-Type: application/json');
 
 $response = [
@@ -10,15 +8,23 @@ $response = [
     'users' => []
 ];
 
-// 4. Verificar si hay término de búsqueda
 if (isset($_GET['query']) && !empty(trim($_GET['query']))) {
     $busqueda = trim($_GET['query']);
     $param = "%" . $busqueda . "%";
 
-    // --- A. BUSCAR PELÍCULAS ---
-    $sqlMovies = "SELECT id_pelicula, nombre, imagen FROM pelicula WHERE nombre LIKE ? LIMIT 10";
+    // --- A. BUSCAR PELÍCULAS (POR TÍTULO O GÉNERO) ---
+    // Usamos DISTINCT para evitar duplicados si coincide nombre y género
+    // Hacemos LEFT JOIN con pelicula_genero y genero para buscar ahí también
+    $sqlMovies = "SELECT DISTINCT p.id_pelicula, p.nombre, p.imagen 
+                  FROM pelicula p
+                  LEFT JOIN pelicula_genero pg ON p.id_pelicula = pg.pelicula
+                  LEFT JOIN genero g ON pg.genero = g.id_genero
+                  WHERE p.nombre LIKE ? OR g.nombre_genero LIKE ? 
+                  LIMIT 20";
+                  
     $stmtM = $conexion->prepare($sqlMovies);
-    $stmtM->bind_param("s", $param);
+    // Vinculamos el parámetro dos veces: una para el título, otra para el género
+    $stmtM->bind_param("ss", $param, $param); 
     $stmtM->execute();
     $resultM = $stmtM->get_result();
     
@@ -28,7 +34,6 @@ if (isset($_GET['query']) && !empty(trim($_GET['query']))) {
     $stmtM->close();
 
     // --- B. BUSCAR USUARIOS ---
-    // AQUI ESTÁ EL CAMBIO: Agregamos 'foto_perfil' a la selección
     $sqlUsers = "SELECT id_usuario, nombre_usuario, seguidores, foto_perfil FROM usuario WHERE nombre_usuario LIKE ? LIMIT 10";
     $stmtU = $conexion->prepare($sqlUsers);
     $stmtU->bind_param("s", $param);

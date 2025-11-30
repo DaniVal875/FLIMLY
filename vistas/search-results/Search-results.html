@@ -1,119 +1,162 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Resultados de Búsqueda - Filmly</title>
   <link rel="stylesheet" href="Search-results.css">
 </head>
+
 <body>
   <header class="header">
-    <button class="back-btn" onclick="window.history.back()">⬅</button>
+    <button class="back-btn" onclick="window.location.href='../home/Home.html'">⬅</button>
     <div class="search-box">
-      <input type="text" placeholder="Buscar películas o usuarios..." id="searchInput">
+      <input type="text" placeholder="Buscar películas, géneros o usuarios..." id="searchInput">
       <button class="search-btn" onclick="realizarBusqueda()">🔍</button>
     </div>
   </header>
 
   <main class="results-container">
-    <h2>Resultados para: "<span id="searchTerm">...</span>"</h2>
+
+    <section class="genres-section">
+      <button class="toggle-genres-btn" onclick="toggleGenres()">
+        🌪️ Filtrar por Género
+      </button>
+
+      <div class="genres-list" id="genres-list" style="display: none;">
+      </div>
+    </section>
+
+    <h2 id="results-title" style="display:none;">Resultados para: "<span id="searchTerm">...</span>"</h2>
 
     <section class="results-section">
       <h3>🎬 Películas</h3>
       <div class="results-grid" id="movies-grid">
-        <p style="color:#ccc">Buscando...</p>
+        <p style="color:#888; font-style: italic;">Escribe algo arriba o selecciona un género.</p>
       </div>
     </section>
 
     <section class="results-section">
       <h3>👤 Usuarios</h3>
       <div class="user-results" id="users-grid">
-         <p style="color:#ccc">Buscando...</p>
       </div>
     </section>
   </main>
 
   <script>
-    function realizarBusqueda() {
-        const query = document.getElementById('searchInput').value;
-        if(query.trim()) {
-            window.location.href = `Search-results.html?query=${encodeURIComponent(query)}`;
-        }
+    // --- 1. Lógica de búsqueda ---
+    function realizarBusqueda(term = null) {
+      // Si nos pasan un término (clic en botón), lo usamos. Si no, leemos el input.
+      const query = term ? term : document.getElementById('searchInput').value;
+
+      if (query.trim()) {
+        // Actualizamos la URL para que se pueda compartir o recargar
+        // Esto recargará la página y ejecutará el "DOMContentLoaded" de abajo
+        window.location.href = `Search-results.html?query=${encodeURIComponent(query)}`;
+      }
     }
 
     document.getElementById('searchInput').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') realizarBusqueda();
+      if (e.key === 'Enter') realizarBusqueda();
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const params = new URLSearchParams(window.location.search);
-        const query = params.get('query');
+    // --- 2. Mostrar/Ocultar géneros ---
+    function toggleGenres() {
+      const list = document.getElementById('genres-list');
+      if (list.style.display === 'none') {
+        list.style.display = 'flex';
+      } else {
+        list.style.display = 'none';
+      }
+    }
 
-        if (!query) return;
+    document.addEventListener('DOMContentLoaded', function () {
 
+      // A. CARGAR BOTONES DE GÉNEROS (NUEVO)
+      fetch('../../controladores/get_all_genres.php')
+        .then(res => res.json())
+        .then(generos => {
+          const container = document.getElementById('genres-list');
+          container.innerHTML = ''; // Limpiar mensaje de carga
+
+          if (generos.length > 0) {
+            generos.forEach(g => {
+              const btn = document.createElement('button');
+              btn.textContent = g;
+              btn.className = 'genre-chip';
+              // Al hacer clic, buscamos ese género
+              btn.onclick = () => realizarBusqueda(g);
+              container.appendChild(btn);
+            });
+          } else {
+            container.innerHTML = '<p>No hay géneros disponibles.</p>';
+          }
+        });
+
+      // B. EJECUTAR BÚSQUEDA SI HAY PARAMETRO EN URL
+      const params = new URLSearchParams(window.location.search);
+      const query = params.get('query');
+
+      if (query) {
         document.getElementById('searchTerm').textContent = query;
         document.getElementById('searchInput').value = query;
+        document.getElementById('results-title').style.display = 'block';
+
+        // Mostrar "Cargando..."
+        document.getElementById('movies-grid').innerHTML = '<p style="color:#ccc">Buscando...</p>';
 
         fetch(`../../controladores/search_controller.php?query=${encodeURIComponent(query)}`)
-            .then(response => response.json())
-            .then(data => {
-                
-                // --- A. RENDERIZAR PELÍCULAS ---
-                const moviesGrid = document.getElementById('movies-grid');
-                moviesGrid.innerHTML = '';
-                if (data.movies && data.movies.length > 0) {
-                    data.movies.forEach(movie => {
-                        const card = document.createElement('a');
-                        card.href = `../movie-details/Movie-details.html?id=${movie.id_pelicula}`;
-                        card.className = 'result-card';
-                        
-                        const imgUrl = movie.imagen || 'https://via.placeholder.com/200x300?text=No+Img';
-                        
-                        card.innerHTML = `
-                            <img src="${imgUrl}" onerror="this.src='https://via.placeholder.com/200x300?text=Error'">
-                            <p>${movie.nombre}</p>
-                        `;
-                        moviesGrid.appendChild(card);
-                    });
-                } else {
-                    moviesGrid.innerHTML = '<p style="color:#888;">No se encontraron películas.</p>';
-                }
+          .then(response => response.json())
+          .then(data => {
+            // Renderizar Películas
+            const moviesGrid = document.getElementById('movies-grid');
+            moviesGrid.innerHTML = '';
+            if (data.movies && data.movies.length > 0) {
+              data.movies.forEach(movie => {
+                const card = document.createElement('a');
+                card.href = `../movie-details/Movie-details.html?id=${movie.id_pelicula}`;
+                card.className = 'result-card';
+                const imgUrl = movie.imagen || 'https://via.placeholder.com/200x300?text=No+Img';
 
-                // --- B. RENDERIZAR USUARIOS ---
-                const usersGrid = document.getElementById('users-grid');
-                usersGrid.innerHTML = '';
+                card.innerHTML = `
+                                <img src="${imgUrl}" onerror="this.src='https://via.placeholder.com/200x300?text=Error'">
+                                <p>${movie.nombre}</p>
+                            `;
+                moviesGrid.appendChild(card);
+              });
+            } else {
+              moviesGrid.innerHTML = '<p style="color:#888;">No se encontraron resultados.</p>';
+            }
 
-                if (data.users && data.users.length > 0) {
-                    data.users.forEach(user => {
-                        const userCard = document.createElement('a');
-                        userCard.href = `../user-profile/User-profile.html?id=${user.id_usuario}`; 
-                        userCard.className = 'user-card';
+            // Renderizar Usuarios
+            const usersGrid = document.getElementById('users-grid');
+            usersGrid.innerHTML = '';
+            if (data.users && data.users.length > 0) {
+              data.users.forEach(user => {
+                const userCard = document.createElement('a');
+                userCard.href = `../user-profile/User-profile.html?id=${user.id_usuario}`;
+                userCard.className = 'user-card';
+                const letter = user.nombre_usuario.charAt(0).toUpperCase();
+                const avatarUrl = user.foto_perfil || `https://via.placeholder.com/100/461561/ffffff?text=${letter}`;
 
-                        // === LÓGICA DE FOTO DE PERFIL ===
-                        // 1. Generamos un avatar por defecto con su inicial
-                        const letter = user.nombre_usuario.charAt(0).toUpperCase();
-                        const defaultAvatar = 'https://via.placeholder.com/100/461561/ffffff?text=' + letter;
-                        
-                        // 2. Si tiene foto en BD la usamos, si no, usamos el default
-                        const avatarUrl = user.foto_perfil || defaultAvatar;
-
-                        userCard.innerHTML = `
-                            <img src="${avatarUrl}" alt="Avatar" onerror="this.src='${defaultAvatar}'">
-                            <div>
-                                <h4>@${user.nombre_usuario}</h4>
-                                <p>${user.seguidores} seguidores</p>
-                            </div>
-                        `;
-                        usersGrid.appendChild(userCard);
-                    });
-                } else {
-                    usersGrid.innerHTML = '<p style="color:#888;">No se encontraron usuarios.</p>';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+                userCard.innerHTML = `
+                                <img src="${avatarUrl}" alt="Avatar">
+                                <div>
+                                    <h4>@${user.nombre_usuario}</h4>
+                                    <p>${user.seguidores} seguidores</p>
+                                </div>
+                            `;
+                usersGrid.appendChild(userCard);
+              });
+            } else {
+              usersGrid.innerHTML = '<p style="color:#888;">No se encontraron usuarios.</p>';
+            }
+          })
+          .catch(error => console.error('Error:', error));
+      }
     });
   </script>
 </body>
+
 </html>

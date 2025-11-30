@@ -10,201 +10,157 @@ body {
 /* ===== BARRA SUPERIOR ===== */
 .top-bar {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   background-color: #2e2e2e;
-  padding: 12px 20px;
+  padding: 10px 25px;
   border-bottom: 2px solid #723680;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-.back-btn {
+.logo {
+  font-size: 1.5rem;
+  color: #fff;
+  margin: 0;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.search-nav-btn {
   background: none;
   border: none;
-  color: #723680;
-  font-size: 1.5em;
+  font-size: 1.5rem;
   cursor: pointer;
-  margin-right: 15px;
   transition: transform 0.2s;
+  text-decoration: none;
 }
 
-.back-btn:hover {
+.search-nav-btn:hover {
   transform: scale(1.1);
 }
 
-.page-title {
-  font-size: 1.3em;
-  margin: 0;
-}
-
-/* ===== INFO DEL PERFIL ===== */
-.profile-info {
-  text-align: center;
-  padding: 30px 20px 10px;
-}
-
-.avatar img {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 3px solid #461561;
-  object-fit: cover;
-  box-shadow: 0 0 15px rgba(70, 21, 97, 0.5);
-}
-
-.username {
-  margin: 15px 0 5px;
-  font-size: 1.5em;
-  color: #723680;
-  font-weight: bold;
-}
-
-.bio {
-  font-size: 0.95em;
-  color: #cccccc;
-  margin-bottom: 20px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* ===== ESTADÍSTICAS ===== */
-.stats {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin-bottom: 25px;
-}
-
-.stat {
-  text-align: center;
-}
-
-.number {
-  display: block;
-  font-size: 1.3em;
-  font-weight: bold;
-  color: #fff;
-}
-
-.label {
-  font-size: 0.85em;
-  color: #bbb;
-}
-
-/* ===== BOTONES DE ACCIÓN ===== */
-.actions {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 30px;
-}
-
-.btn {
-  background-color: #461561;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.95em;
-  font-weight: 500;
-  transition: background-color 0.3s, transform 0.2s;
-  text-decoration: none; /* Por si usas <a> */
-}
-
-.btn:hover {
-  background-color: #723680;
-  transform: translateY(-2px);
-}
-
-/* ===== SECCIÓN DE RESEÑAS (NUEVO DISEÑO DE LISTA) ===== */
-
-.reviews {
-  padding: 0 20px 40px;
-  max-width: 800px;
-  margin: 0 auto;   /* Centrado horizontal */
+/* ===== SECCIONES ===== */
+.movies-section {
+  padding: 20px 30px;
+  padding-bottom: 80px;
 }
 
 .section-title {
-  font-size: 1.4em;
-  margin-bottom: 20px;
-  text-align: left; /* Alineado a la izquierda para mejor lectura */
+  font-size: 1.3rem;
   color: #fff;
-  font-weight: 600;
-  border-left: 4px solid #723680;
-  padding-left: 12px;
+  margin-bottom: 15px;
+  border-left: 5px solid #723680;
+  padding-left: 10px;
 }
 
-/* Contenedor de la lista */
-.review-list {
-  display: flex;
-  flex-direction: column;
-  gap: 15px; /* Espacio entre tarjetas */
+/* ===== GRID DE PELÍCULAS (8 COLUMNAS) ===== */
+.movie-grid {
+  display: grid;
+  /* 8 columnas exactas */
+  grid-template-columns: repeat(8, 1fr);
+  gap: 15px;
+  /* Un poco más de espacio para que respiren */
+  margin-bottom: 30px;
 }
 
-/* Tarjeta Individual (Horizontal) */
-.review-card {
-  display: flex;             /* Flexbox para alinear horizontalmente */
-  flex-direction: row;       /* Imagen izquierda, texto derecha */
-  background-color: #1e1e1e; /* Fondo gris oscuro */
-  border-radius: 10px;
-  padding: 15px;
-  text-decoration: none;
-  align-items: flex-start;   /* Alinear al inicio arriba */
-  color: #fff;
-  transition: transform 0.2s, background-color 0.2s;
-  border: 1px solid #2a2a2a; /* Borde muy sutil */
-}
-
-.review-card:hover {
-  transform: translateY(-3px);
-  background-color: #252525;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-
-/* Imagen (Póster) */
-.review-card .movie-poster {
-  width: 80px;        /* Ancho fijo */
-  height: 120px;      /* Alto fijo */
-  object-fit: cover;  /* Recorta sin deformar */
+/* ===== TARJETA DE PELÍCULA ===== */
+.movie-card {
+  background-color: transparent;
+  /* Fondo transparente para que solo resalte la imagen */
   border-radius: 6px;
-  margin-right: 20px; /* Separación con el texto */
-  flex-shrink: 0;     /* Evita que se aplaste */
-  background-color: #333;
-}
-
-/* Contenido de Texto */
-.review-content {
+  overflow: hidden;
+  /* Asegura que la imagen respete los bordes redondeados */
+  text-decoration: none;
+  color: white;
+  transition: transform 0.2s, box-shadow 0.2s;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  flex: 1; /* Toma todo el espacio restante */
 }
 
-/* Título de la película */
-.review-content h4 {
-  margin: 0 0 5px 0;
-  font-size: 1.1rem;
-  color: #fff;
-  font-weight: bold;
+.movie-card:hover {
+  transform: scale(1.05);
+  z-index: 10;
 }
 
-/* Texto de la reseña */
-.review-text {
-  font-size: 0.95rem;
-  color: #ccc;
-  margin: 5px 0 10px 0;
-  line-height: 1.4;
-  font-style: italic;
-  
-  /* Opcional: Limitar a 3 líneas y poner "..." si es muy largo */
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+/* ===== IMAGEN VERTICAL (TIPO PÓSTER) ===== */
+.movie-card img {
+  width: 100%;
+
+  /* ESTO ES LO NUEVO: */
+  /* Fuerza la proporción vertical estándar de cine (2:3) */
+  aspect-ratio: 2/3;
+
+  object-fit: cover;
+  /* Recorta la imagen si no encaja, para no deformarla */
+  border-radius: 6px;
+  /* Redondeamos la imagen directamente */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  /* Sombra suave tras la imagen */
+}
+
+.movie-card p {
+  padding: 8px 2px;
+  font-size: 0.8rem;
+  text-align: center;
+  margin: 0;
+  color: #ddd;
+
+  /* Cortar texto largo con puntos suspensivos */
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Estrellas */
-.rating {
-  margin-top: auto; /* Empuja las estrellas hacia abajo si hay espacio */
-  font-size: 1rem;
+/* ===== RESPONSIVE ===== */
+/* Ajustamos las columnas en pantallas más pequeñas para que no se vean minúsculas */
+
+@media (max-width: 1200px) {
+  .movie-grid {
+    grid-template-columns: repeat(6, 1fr);
+    /* 6 columnas en laptops pequeñas */
+  }
+}
+
+@media (max-width: 900px) {
+  .movie-grid {
+    grid-template-columns: repeat(4, 1fr);
+    /* 4 columnas en tablets */
+  }
+}
+
+@media (max-width: 500px) {
+  .movie-grid {
+    grid-template-columns: repeat(3, 1fr);
+    /* 3 columnas en móviles */
+    gap: 10px;
+  }
+}
+
+/* ===== MENÚ INFERIOR FLOTANTE ===== */
+.bottom-menu {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #2e2e2e;
+  border-radius: 30px;
+  padding: 10px 25px;
+  display: flex;
+  gap: 30px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.7);
+  border: 1px solid #723680;
+  z-index: 100;
+}
+
+.menu-item {
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+  color: #fff;
+  text-decoration: none;
+}
+
+.menu-item:hover {
+  transform: translateY(-3px);
+  color: #cba3d6;
 }
