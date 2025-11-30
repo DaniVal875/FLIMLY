@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../conexion.php'; //
+include '../conexion.php'; 
 
 header('Content-Type: application/json');
 
@@ -11,13 +11,13 @@ if (!isset($_SESSION['id_usuario'])) {
 
 $mi_id = $_SESSION['id_usuario'];
 
-// 1. ELEGIR HASTA 3 USUARIOS SEGUIDOS AL AZAR
+
 $sqlFollowed = "SELECT u.id_usuario, u.nombre_usuario, u.foto_perfil 
                 FROM seguimiento s
                 JOIN usuario u ON s.id_seguido = u.id_usuario
                 WHERE s.id_seguidor = ?
                 ORDER BY RAND() 
-                LIMIT 3"; // <--- CAMBIO: Ahora traemos 3
+                LIMIT 3"; 
 
 $stmt = $conexion->prepare($sqlFollowed);
 $stmt->bind_param("i", $mi_id);
@@ -27,7 +27,7 @@ $resultFollowed = $stmt->get_result();
 $amigosData = [];
 
 while ($amigo = $resultFollowed->fetch_assoc()) {
-    // 2. POR CADA AMIGO, BUSCAR SUS RESEÑAS (Máximo 4 por fila para no saturar)
+    
     $sqlReviews = "SELECT p.id_pelicula, p.nombre, p.imagen, r.calificacion
                    FROM resenia r
                    JOIN pelicula p ON r.pelicula = p.id_pelicula

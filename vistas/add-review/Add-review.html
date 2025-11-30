@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agregar Reseña</title>
   <link rel="stylesheet" href="Add-review.css">
 </head>
+
 <body>
   <header class="header">
     <button class="back-btn" onclick="window.history.back()">⬅</button>
@@ -38,66 +40,62 @@
   </main>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // 1. Obtener el ID de la película desde la URL actual
-        const params = new URLSearchParams(window.location.search);
-        const movieId = params.get('id');
-        
-        // Validación: Si no hay ID, regresamos al usuario porque no sabe qué reseñar
-        if(!movieId) {
-            alert("Error: No se seleccionó ninguna película.");
-            window.history.back();
-            return;
-        }
+    document.addEventListener('DOMContentLoaded', function () {
+      const params = new URLSearchParams(window.location.search);
+      const movieId = params.get('id');
 
-        // Asignamos el ID al input oculto para que se envíe con el formulario
-        document.getElementById('id_pelicula').value = movieId;
+      if (!movieId) {
+        alert("Error: No se seleccionó ninguna película.");
+        window.history.back();
+        return;
+      }
 
-        // 2. Cargar datos visuales (Póster y Título) para que el usuario sepa qué está reseñando
-        fetch(`../../controladores/get_movie_details_controller.php?id=${movieId}`)
-            .then(res => res.json())
-            .then(data => {
-                if(!data.error) {
-                    document.getElementById('movie-title').textContent = data.nombre;
-                    // Si la imagen falla o es nula, ponemos una por defecto
-                    document.getElementById('poster').src = data.imagen || 'https://via.placeholder.com/200x300?text=No+Img';
-                    document.getElementById('poster').onerror = function() {
-                        this.src = 'https://via.placeholder.com/200x300?text=Error';
-                    };
-                } else {
-                    document.getElementById('movie-title').textContent = "Película no encontrada";
-                }
-            })
-            .catch(err => console.error("Error cargando detalles:", err));
+      document.getElementById('id_pelicula').value = movieId;
 
-        // 3. Manejar el envío del formulario
-        document.getElementById('review-form').addEventListener('submit', function(e) {
-            e.preventDefault(); // Evitamos recarga de página
-            
-            const formData = new FormData(this);
+      // Cargar datos visuales
+      fetch(`../../controladores/get_movie_details_controller.php?id=${movieId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.error) {
+            document.getElementById('movie-title').textContent = data.nombre;
+            document.getElementById('poster').src = data.imagen || 'https://via.placeholder.com/200x300?text=No+Img';
+            document.getElementById('poster').onerror = function () {
+              this.src = 'https://via.placeholder.com/200x300?text=Error';
+            };
+          } else {
+            document.getElementById('movie-title').textContent = "Película no encontrada";
+          }
+        })
+        .catch(err => console.error("Error cargando detalles:", err));
 
-            fetch('../../controladores/add_review_controller.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.success) {
-                    // === ÉXITO ===
-                    // Redirigimos a la pantalla de éxito PASANDO EL ID DE LA PELÍCULA
-                    // Esto es vital para que el botón "Volver" sepa a dónde regresar
-                    window.location.href = `../review-success/Review-success.html?id=${movieId}`;
-                } else {
-                    // Error del servidor (ej: sesión expirada, campos vacíos)
-                    alert("Error: " + data.message);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert("Error de conexión al enviar la reseña.");
-            });
-        });
+      // Manejar envío
+      document.getElementById('review-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+
+        fetch('../../controladores/add_review_controller.php', {
+          method: 'POST',
+          body: formData
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              // === AQUÍ ESTÁ EL CAMBIO CLAVE ===
+              // Usamos .replace() para borrar este formulario del historial.
+              // Así, al volver atrás desde la siguiente pantalla, no caeremos aquí de nuevo.
+              window.location.replace(`../review-success/Review-success.html?id=${movieId}`);
+            } else {
+              alert("Error: " + data.message);
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            alert("Error de conexión al enviar la reseña.");
+          });
+      });
     });
   </script>
 </body>
+
 </html>

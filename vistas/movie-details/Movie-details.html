@@ -1,27 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CineReseñas - Detalle de Película</title>
   <link rel="stylesheet" href="Movie-details.css">
 </head>
+
 <body>
   <header class="top-bar">
-    <button class="back-btn" onclick="window.history.back()" title="Volver">⬅</button>
+    <button class="back-btn" onclick="window.location.href='../home/Home.html'" title="Volver al Inicio">⬅</button>
     <h1 class="page-title">Detalle de Película</h1>
   </header>
 
   <section class="movie-info">
     <img src="" alt="Cargando..." class="movie-poster" id="poster">
-    
+
     <div class="movie-details">
       <h2 class="movie-title" id="title">Cargando...</h2>
-      
-      <div id="average-container" style="display: flex; align-items: center; margin-bottom: 15px; background: #1e1e1e; padding: 5px 15px; border-radius: 20px; width: fit-content; border: 1px solid #723680;">
-          <span style="font-size: 1.5rem; color: #FFC107; margin-right: 8px;">⭐</span>
-          <span id="avg-score" style="font-size: 1.2rem; font-weight: bold; color: #fff;">--</span>
-          <span style="font-size: 0.9rem; color: #aaa; margin-left: 5px;">/ 5</span>
+
+      <div id="average-container"
+        style="display: flex; align-items: center; margin-bottom: 15px; background: #1e1e1e; padding: 5px 15px; border-radius: 20px; width: fit-content; border: 1px solid #723680;">
+        <span style="font-size: 1.5rem; color: #FFC107; margin-right: 8px;">⭐</span>
+        <span id="avg-score" style="font-size: 1.2rem; font-weight: bold; color: #fff;">--</span>
+        <span style="font-size: 0.9rem; color: #aaa; margin-left: 5px;">/ 5</span>
       </div>
 
       <p><strong>Director:</strong> <span id="director">...</span></p>
@@ -29,7 +32,7 @@
       <p><strong>Género:</strong> <span id="genre">...</span></p>
       <p><strong>Idioma:</strong> <span id="language">...</span></p>
       <p><strong>Duración:</strong> <span id="duration">...</span> min</p>
-      
+
       <p class="movie-desc" id="desc">Cargando sinopsis...</p>
     </div>
   </section>
@@ -37,14 +40,14 @@
   <section class="reviews">
     <h3 class="section-title">Reseñas de la Comunidad</h3>
     <div id="reviews-container">
-        <p style="color:#ccc">Cargando opiniones...</p>
+      <p style="color:#ccc">Cargando opiniones...</p>
     </div>
   </section>
 
   <button class="add-review-btn" title="Agregar reseña" id="btn-add-review">➕</button>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const params = new URLSearchParams(window.location.search);
       const movieId = params.get('id');
 
@@ -57,59 +60,58 @@
         return;
       }
 
-      // 1. CARGAR INFO DE LA PELÍCULA (Incluyendo Promedio)
+      // 1. CARGAR INFO DE LA PELÍCULA
       fetch(`../../controladores/get_movie_details_controller.php?id=${movieId}`)
         .then(response => response.json())
         .then(data => {
-            if (!data.error) {
-                document.getElementById('title').textContent = data.nombre;
-                document.getElementById('desc').textContent = data.sinopsis;
-                document.getElementById('year').textContent = data.fecha_estreno;
-                document.getElementById('duration').textContent = data.duracion;
-                document.getElementById('director').textContent = data.directores || 'Desconocido';
-                document.getElementById('genre').textContent = data.generos || 'Sin género';
-                document.getElementById('language').textContent = data.idiomas || 'Desconocido';
-                
-                // === MOSTRAR PROMEDIO ===
-                const scoreElement = document.getElementById('avg-score');
-                if (data.promedio) {
-                    // Convertimos a número y dejamos solo 1 decimal (ej: 4.5)
-                    const promedio = parseFloat(data.promedio).toFixed(1);
-                    scoreElement.textContent = promedio;
-                } else {
-                    scoreElement.textContent = "N/A"; // Si no hay reseñas
-                    scoreElement.style.color = "#888";
-                }
+          if (!data.error) {
+            document.getElementById('title').textContent = data.nombre;
+            document.getElementById('desc').textContent = data.sinopsis;
+            document.getElementById('year').textContent = data.fecha_estreno;
+            document.getElementById('duration').textContent = data.duracion;
+            document.getElementById('director').textContent = data.directores || 'Desconocido';
+            document.getElementById('genre').textContent = data.generos || 'Sin género';
+            document.getElementById('language').textContent = data.idiomas || 'Desconocido';
 
-                const img = document.getElementById('poster');
-                img.src = data.imagen || 'https://via.placeholder.com/300x450?text=No+Image';
-                img.onerror = () => img.src = 'https://via.placeholder.com/300x450?text=Error';
+            // Promedio
+            const scoreElement = document.getElementById('avg-score');
+            if (data.promedio) {
+              const promedio = parseFloat(data.promedio).toFixed(1);
+              scoreElement.textContent = promedio;
+            } else {
+              scoreElement.textContent = "N/A";
+              scoreElement.style.color = "#888";
             }
+
+            const img = document.getElementById('poster');
+            img.src = data.imagen || 'https://via.placeholder.com/300x450?text=No+Image';
+            img.onerror = () => img.src = 'https://via.placeholder.com/300x450?text=Error';
+          }
         })
         .catch(err => console.error("Error al cargar detalles:", err));
 
-      // 2. CARGAR RESEÑAS (Igual que antes)
+      // 2. CARGAR RESEÑAS
       fetch(`../../controladores/get_reviews_controller.php?id=${movieId}`)
         .then(response => response.json())
         .then(reviews => {
-            const container = document.getElementById('reviews-container');
-            container.innerHTML = '';
+          const container = document.getElementById('reviews-container');
+          container.innerHTML = '';
 
-            if (reviews.length > 0) {
-                reviews.forEach(review => {
-                    const card = document.createElement('div');
-                    card.className = 'review-card';
-                    
-                    let starsHTML = '';
-                    for(let i=1; i<=5; i++) {
-                        if (i <= review.calificacion) {
-                            starsHTML += '<span class="circle" style="background-color:#723680; color:white;">⭐</span> ';
-                        } else {
-                            starsHTML += '<span class="circle empty" style="background-color:#333; color:gray; filter: grayscale(100%) opacity(0.3);">⭐</span> ';
-                        }
-                    }
+          if (reviews.length > 0) {
+            reviews.forEach(review => {
+              const card = document.createElement('div');
+              card.className = 'review-card';
 
-                    card.innerHTML = `
+              let starsHTML = '';
+              for (let i = 1; i <= 5; i++) {
+                if (i <= review.calificacion) {
+                  starsHTML += '<span class="circle" style="background-color:#723680; color:white;">⭐</span> ';
+                } else {
+                  starsHTML += '<span class="circle empty" style="background-color:#333; color:gray; filter: grayscale(100%) opacity(0.3);">⭐</span> ';
+                }
+              }
+
+              card.innerHTML = `
                         <div class="review-content" style="width:100%;">
                             <div style="display:flex; justify-content:space-between; align-items:center;">
                                 <h4 class="username" style="margin:0; color:#fff;">@${review.nombre_usuario}</h4>
@@ -121,14 +123,15 @@
                             <p style="color:#ddd; margin-top:5px;">${review.texto_resenia}</p>
                         </div>
                     `;
-                    container.appendChild(card);
-                });
-            } else {
-                container.innerHTML = '<p style="color:#aaa;">Aún no hay reseñas para esta película. ¡Sé el primero!</p>';
-            }
+              container.appendChild(card);
+            });
+          } else {
+            container.innerHTML = '<p style="color:#aaa;">Aún no hay reseñas para esta película. ¡Sé el primero!</p>';
+          }
         })
         .catch(err => console.error("Error al cargar reseñas:", err));
     });
   </script>
 </body>
+
 </html>

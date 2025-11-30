@@ -1,40 +1,43 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Confirmación de Reseña</title>
   <link rel="stylesheet" href="Review-success.css">
 </head>
+
 <body>
   <div class="success-container">
     <div class="success-card">
       <h1>🎉 Reseña enviada con éxito</h1>
       <p>Tu opinión ha sido publicada y ahora otros usuarios podrán verla.</p>
-      
+
       <button id="btn-volver" class="btn">Volver a la Película</button>
     </div>
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // 1. Recuperar el ID de la película de la URL actual
-        const params = new URLSearchParams(window.location.search);
-        const movieId = params.get('id');
+    document.addEventListener('DOMContentLoaded', function () {
+      // Recuperamos el ID de la película
+      const params = new URLSearchParams(window.location.search);
+      const movieId = params.get('id');
 
-        const btnVolver = document.getElementById('btn-volver');
+      const btnVolver = document.getElementById('btn-volver');
 
-        // 2. Configurar el botón según si tenemos ID o no
-        btnVolver.onclick = function() {
-            if (movieId) {
-                // Si tenemos ID, volvemos a los detalles de ESA película
-                location.href = `../movie-details/Movie-details.html?id=${movieId}`;
-            } else {
-                // Si por alguna razón se perdió el ID, mejor volvemos al Home
-                location.href = `../home/Home.html`;
-            }
-        };
+      btnVolver.onclick = function () {
+        if (movieId) {
+          // Usamos .replace() para ir al DETALLE DE LA PELÍCULA
+          // pero borrando esta pantalla de éxito del historial.
+          window.location.replace(`../movie-details/Movie-details.html?id=${movieId}`);
+        } else {
+          // Por seguridad, si falla el ID, al Home
+          window.location.replace('../home/Home.html');
+        }
+      };
     });
   </script>
 </body>
+
 </html>
