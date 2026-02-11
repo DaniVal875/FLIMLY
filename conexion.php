@@ -1,18 +1,19 @@
 <?php
-// Configuración de la conexión
+// Configuración de la conexión a la base de datos
 $servidor = "localhost";
 $usuario = "root";
-$contrasena = ""; // Por defecto en XAMPP la contraseña es vacía
+$contrasena = "";
 $base_de_datos = "filmly";
 
-// Crear la conexión con mysqli
+// Crear la conexión
 $conexion = new mysqli($servidor, $usuario, $contrasena, $base_de_datos);
 
-// Verificar si hay un error de conexión
+// Verificar la conexión
 if ($conexion->connect_error) {
   die("Error de conexión: " . $conexion->connect_error);
 }
 
-// Establecer el juego de caracteres a UTF-8 para manejar tildes y ñ
-$conexion->set_charset("utf8");
+// === CAMBIO AQUÍ: Usar 'utf8mb4' en lugar de 'utf8' ===
+// Esto permite caracteres especiales como emojis y signos como '¡' sin errores
+$conexion->set_charset("utf8mb4");
 ?>
